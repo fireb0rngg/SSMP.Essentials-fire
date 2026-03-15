@@ -64,6 +64,7 @@ namespace SSMP_Utils.Client.Modules
             var player = InScene[FollowedPlayerIndex];
             FollowedPlayer = player.PlayerObject;
             var transform = FollowedPlayer.transform;
+            ImmobilizePlayer();
 
             var target = GameManager.instance.cameraCtrl.camTarget;
 
