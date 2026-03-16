@@ -32,5 +32,10 @@ namespace SSMPUtils.Server
             return api.ServerManager.GetPlayer(id);
         }
 
+        public static void SendMessageToPlayer(ushort id, string message)
+        {
+            api.ServerManager.SendMessage(id, message);
+        }
+
     }
 }

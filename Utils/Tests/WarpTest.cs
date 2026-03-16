@@ -1,4 +1,5 @@
 ﻿using SSMPUtils.Client;
+using SSMPUtils.Client.Packets;
 using SSMPUtils.Server.Packets;
 using System;
 using System.Collections.Generic;
@@ -13,10 +14,10 @@ namespace SSMPUtils.Utils.Tests
 
         public override void Execute()
         {
-            var packet = new WarpPacket
+            var packet = new TeleportPacket
             {
                 Scene = "Bonetown",
-                Position = new Vector2(100, 15),
+                Position = new SSMP.Math.Vector2(100, 15),
             };
 
             PacketReceiver.OnHuddle(packet);

@@ -44,6 +44,7 @@
   <ItemGroup>
     <Folder Remove="thunderstore/temp;thunderstore/dist" />
     <Folder Include="Server\Commands\" />
+    <Folder Include="Server\Modules\" />
     <None Include="README.md" Pack="True" PackagePath="README.md" />
     <None Include="thunderstore/icon.png" Pack="True" PackagePath="icon.png" />
   </ItemGroup>

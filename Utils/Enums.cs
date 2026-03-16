@@ -7,6 +7,13 @@ namespace SSMPUtils.Utils
     internal enum PacketIDs
     {
         Huddle,
-        Warp
+        TeleportRequest,
+        TeleportAccept,
+        Message
+    }
+
+    internal enum Messages
+    {
+        TeleportDenied,
     }
 }

@@ -4,16 +4,17 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using static UnityEngine.UI.GridLayoutGroup;
+using Vector2 = SSMP.Math.Vector2;
 
 namespace SSMPUtils.Client.Modules
 {
     internal class Warp
     {
+        static bool teleporting = false;
         string scene;
-        Vector2 position;
+        UnityEngine.Vector2 position;
 
-        public Warp(string scene, Vector2 position)
+        public Warp(string scene, UnityEngine.Vector2 position)
         {
             this.scene = scene;
             this.position = position;
@@ -27,6 +28,8 @@ namespace SSMPUtils.Client.Modules
             var hornet = Common.HornetObject;
 
             hornet.transform.SetPosition2D(position);
+
+            teleporting = false;
         }
 
         public void WarpToPosition()
@@ -35,11 +38,13 @@ namespace SSMPUtils.Client.Modules
             var hornet = Common.HornetObject;
 
             // Check if hornet even exists
-            if (hornet == null)
+            if (hornet == null || teleporting)
             {
                 FailedWarp(scene);
                 return;
             }
+
+            teleporting = true;
 
             // No scene changes required
             if (scene == currentScene)
@@ -75,10 +80,39 @@ namespace SSMPUtils.Client.Modules
             GameManager.instance.OnFinishedEnteringScene += SetHornetPosition;
         }
         
-
         static void FailedWarp(string scene)
         {
             Client.LocalChat($"I couldn't warp you. Please join the rest of the server in {scene}.");
+        }
+
+        public static bool GetHornetScenePosition(out string scene, out Vector2 position)
+        {
+            scene = SceneManager.GetActiveScene().name;
+            position = Vector2.Zero;
+
+            if (GameManager.SilentInstance == null || GameManager.SilentInstance.GameState != GlobalEnums.GameState.PLAYING)
+            {
+                Client.LocalChat("Resume the game first!");
+                return false;
+            }
+
+            if (scene == null)
+            {
+                Client.LocalChat("I couldn't find the current scene!");
+                Log.LogError("ACTUAL ERROR: Unable to find current scene.");
+                return false;
+            }
+
+            var hornet = Common.HornetObject;
+            if (hornet == null)
+            {
+                Client.LocalChat("I couldn't find your position. Uh oh!");
+                Log.LogError("ACTUAL ERROR: Unable to find hornet object");
+                return false;
+            }
+
+            position = (Vector2)(UnityEngine.Vector2)hornet.transform.position;
+            return true;
         }
     }
 }

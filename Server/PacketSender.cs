@@ -1,11 +1,7 @@
-﻿using SSMP.Api.Server;
-using SSMP.Api.Server.Networking;
+﻿using SSMP.Api.Server.Networking;
+using SSMP.Math;
 using SSMP.Networking.Packet;
 using SSMPUtils.Utils;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using UnityEngine;
 
 namespace SSMPUtils.Server
 {
@@ -26,13 +22,46 @@ namespace SSMPUtils.Server
             }
         }
 
-        internal static void BroadcastWarp(string scene, Vector2 location, ushort senderId)
+        internal static void BroadcastWarp(string scene, Vector2 position, ushort senderId)
         {
-            Broadcast(PacketIDs.Warp, new Client.Packets.HuddlePacket
+            Broadcast(PacketIDs.Huddle, new Client.Packets.TeleportPacket
             {
                 Scene = scene,
-                Position = location
+                Position = position
             }, senderId);
+        }
+
+        internal static void SendTeleportRequest(ushort targetPlayerId, ushort senderId)
+        {
+            var data = new Client.Packets.TeleportRequestPacket
+            {
+                PlayerId = senderId
+            };
+
+            sender.SendSingleData(PacketIDs.TeleportRequest, data, targetPlayerId);
+        }
+
+        internal static void SendTeleportAccepted(ushort playerToTeleportId, string scene,  Vector2 position)
+        {
+            var data = new Client.Packets.TeleportPacket
+            {
+                PlayerId = playerToTeleportId,
+                Position = position,
+                Scene = scene
+            };
+
+            sender.SendSingleData(PacketIDs.TeleportAccept, data, playerToTeleportId);
+        }
+
+        internal static void SendMessage(ushort recipientId, ushort senderId, Messages message)
+        {
+            var data = new Client.Packets.MessagePacket
+            {
+                Message = message,
+                PlayerId = senderId
+            };
+
+            sender.SendSingleData(PacketIDs.Message, data, recipientId);
         }
     }
 }
