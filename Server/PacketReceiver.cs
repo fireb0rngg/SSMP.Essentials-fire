@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using SSMP.Math;
+using Cause = SSMPUtils.Client.Modules.PlayerDeaths.CauseOfDeath;
 
 namespace SSMPUtils.Server
 {
@@ -20,6 +21,7 @@ namespace SSMPUtils.Server
             receiver.RegisterPacketHandler<TeleportRequestPacket>(PacketIDs.TeleportRequest, OnTeleportRequest);
             receiver.RegisterPacketHandler<TeleportPacket>(PacketIDs.TeleportAccept, OnTeleportRequestAccept);
             receiver.RegisterPacketHandler<MessagePacket>(PacketIDs.Message, OnMessage);
+            receiver.RegisterPacketHandler<DeathPacket>(PacketIDs.PlayerDeath, OnPlayerDeath);
         }
 
         public static void OnHuddle(ushort id, TeleportPacket data)
@@ -87,6 +89,42 @@ namespace SSMPUtils.Server
             }
 
             PacketSender.SendMessage(data.PlayerId, id, data.Message);
+        }
+
+        public static void OnPlayerDeath(ushort id, DeathPacket data)
+        {
+            var player = Server.GetPlayer(id);
+            if (player == null) return;
+
+            var opponent = Server.GetPlayer(data.KillerID)?.Username ?? "another user";
+            var deathString = player.Username + " " + DetermineDeathString(data.Cause, opponent);
+
+            if (data.Cause != Cause.Player && data.RanAway)
+            {
+                deathString += " while running away from " + opponent;
+            }
+
+            Server.api.ServerManager.BroadcastMessage(deathString);
+        }
+
+        static string DetermineDeathString(Cause cause, string username)
+        {
+            return cause switch
+            {
+                Cause.Player => $"lost a duel to {username}",
+                Cause.Enemy => "had an intimate encounter with an enemy",
+                Cause.Spikes => "got impaled by spikes",
+                Cause.Acid => "forgot to equip Isma's Tear before hopping in acid",
+                Cause.Lava => "sung Lava Chicken too hard and became one",
+                Cause.Pit => "fell down a hole",
+                Cause.Coal => "got hit by a lump of coal in the head",
+                Cause.Zap => "was electrocuted to death",
+                Cause.Explosion => "went Last Judge mode and blew up",
+                Cause.Sink => "sunk so low that they couldn't get out",
+                Cause.Steam => "took a ride in a kettle",
+                Cause.CoalSpikes => "did something with coal spikes (not sure what that is)",
+                _ => "died so epicly that there isn't even a reason",
+            };
         }
     }
 }

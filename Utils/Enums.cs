@@ -9,7 +9,8 @@ namespace SSMPUtils.Utils
         Huddle,
         TeleportRequest,
         TeleportAccept,
-        Message
+        Message,
+        PlayerDeath
     }
 
     internal enum Messages

@@ -31,9 +31,18 @@ public partial class SSMPUtilsPlugin : BaseUnityPlugin
         SSMP.Api.Server.ServerAddon.RegisterAddon(new Server.Server());
 
         Harmony.CreateAndPatchAll(typeof(MaskerPatch), "ssmp.utils");
+        Harmony.CreateAndPatchAll(typeof(DamageHeroPatch), "ssmp.utils");
 
-        HeroController.OnHeroInstanceSet += Spectate.CreateFreecamUI;
+        HeroController.OnHeroInstanceSet += InitializeHCModules;
 
+    }
+
+    private void InitializeHCModules(HeroController controller)
+    {
+        HeroController.OnHeroInstanceSet -= InitializeHCModules;
+
+        Spectate.CreateFreecamUI();
+        controller.OnDeath += PlayerDeaths.OnDeath;
     }
 
     private void Update()

@@ -189,7 +189,7 @@ namespace SSMPUtils.Client.Modules
             //GameManager.instance.cameraCtrl.isGameplayScene = true;
         }
 
-        public static void CreateFreecamUI(HeroController hero)
+        public static void CreateFreecamUI()
         {
             var inGame = GameManager.instance.gameCams.hudCamera.transform.GetChild(0);
             var existingArrows = inGame.GetChild(4).GetChild(2).GetChild(1).GetChild(0).gameObject;

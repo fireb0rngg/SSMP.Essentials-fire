@@ -5,6 +5,7 @@ using SSMPUtils.Client.Packets;
 using SSMPUtils.Utils;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -90,6 +91,29 @@ namespace SSMPUtils.Client
             };
 
             sender.SendSingleData(PacketIDs.TeleportRequest, data);
+        }
+
+        internal static void SendDeath(PlayerDeaths.CauseOfDeath cause, ushort killerId = 0, bool ranAway = false)
+        {
+            var scene = SceneManager.GetActiveScene().name;
+            SceneTeleportMap.GetTeleportMap().TryGetValue(scene, out var map);
+
+            var areaName = scene;
+            if (map != null)
+            {
+                var split = map.MapZone.ToString().Replace('_', ' ');
+                areaName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(split);
+            }
+
+            var data = new DeathPacket
+            {
+                Scene = areaName,
+                KillerID = killerId,
+                Cause = cause,
+                RanAway = ranAway
+            };
+
+            sender.SendSingleData(PacketIDs.PlayerDeath, data);
         }
     }
 }

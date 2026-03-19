@@ -1,9 +1,10 @@
-﻿using SSMP.Networking.Packet;
+﻿using SSMP.Math;
+using SSMP.Networking.Packet;
 using SSMPUtils.Utils;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using SSMP.Math;
+using static SSMPUtils.Client.Modules.PlayerDeaths;
 
 namespace SSMPUtils.Client.Packets
 {
@@ -70,6 +71,32 @@ namespace SSMPUtils.Client.Packets
         }
     }
 
+    internal class DeathPacket : IPacketData
+    {
+        public bool IsReliable => true;
+        public bool DropReliableDataIfNewerExists => true;
+
+        public ushort KillerID;
+        public CauseOfDeath Cause = CauseOfDeath.Unknown;
+        public bool RanAway = false;
+        public string Scene = "";
+        public virtual void WriteData(IPacket packet)
+        {
+            packet.Write(KillerID);
+            packet.Write((ushort)Cause);
+            packet.Write(RanAway);
+            packet.Write(Scene);
+        }
+
+        public virtual void ReadData(IPacket packet)
+        {
+            KillerID = packet.ReadUShort();
+            Cause = (CauseOfDeath)packet.ReadUShort();
+            RanAway = packet.ReadBool();
+            Scene = packet.ReadString();
+        }
+    }
+
     public static class Packets
     {
         internal static IPacketData Instantiate(PacketIDs packetID)
@@ -80,6 +107,7 @@ namespace SSMPUtils.Client.Packets
                 PacketIDs.TeleportRequest => new TeleportRequestPacket(),
                 PacketIDs.TeleportAccept => new TeleportPacket(),
                 PacketIDs.Message => new MessagePacket(),
+                PacketIDs.PlayerDeath => new DeathPacket(),
                 _ => throw new NotImplementedException()
             };
         }
