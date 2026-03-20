@@ -50,6 +50,7 @@ namespace SSMPUtils.Client.Modules
 
         public static void FocusOnPlayer(MoveDir dir)
         {
+            if (InScene.Count == 0) return;
             if (dir == MoveDir.Prev)
             {
                 if (FollowedPlayerIndex <= 0) FollowedPlayerIndex = InScene.Count - 1;
@@ -134,14 +135,15 @@ namespace SSMPUtils.Client.Modules
             {
                 RestoreControl();
                 //StartCoroutine(GameManager.instance.cameraCtrl.DoPositionToHero(true));
-            }
-            if (arrows != null) arrows.SetActive(false);
-            GameManager.instance.cameraCtrl.camTarget.heroTransform = HeroController.instance.transform;
+                GameManager.instance.cameraCtrl.camTarget.heroTransform = HeroController.instance.transform;
 
-            if (!wasSceneChange)
-            {
-                FixMasks(HeroController.instance.gameObject);
+                if (!wasSceneChange)
+                {
+                    FixMasks(HeroController.instance.gameObject);
+                }
             }
+
+            if (arrows != null) arrows.SetActive(false);
         }
 
         static void FixMasks(GameObject playerObject)
