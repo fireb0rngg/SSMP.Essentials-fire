@@ -34,7 +34,7 @@ namespace SSMPUtils.Client.Modules
             requests.Add(request);
 
             // Notify
-            var requestStr = $"{player.Username} has requested to teleport to you." +
+            var requestStr = $"{Common.ColoredUsername(player)} has requested to teleport to you." +
                 "Use /tpaccept or /tpdeny within 30 seconds to respond.";
 
             Client.LocalChat(requestStr);
@@ -57,7 +57,7 @@ namespace SSMPUtils.Client.Modules
                 request = requests.LastOrDefault(r => r.PlayerId == player.Id);
                 if (request == null)
                 {
-                    Client.LocalChat($"{username} hasn't sent you a request.");
+                    Client.LocalChat($"{Common.ColoredUsername(player)} hasn't sent you a request.");
                     return;
                 }
             }

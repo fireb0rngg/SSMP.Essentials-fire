@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections;
 using UnityEngine;
+using SSMP.Game;
+using SSMP.Api.Server;
+using SSMP.Api.Client;
 
 namespace SSMPUtils.Utils
 {
@@ -38,6 +38,52 @@ namespace SSMPUtils.Utils
             hero.FinishedEnteringScene(setHazardMarker: false);
 
             hero.RegainControl();
+        }
+
+        public static string TextColor(string text,  Colors color)
+        {
+            var colorStr = color switch
+            {
+                Colors.White => "white",
+                Colors.Black => "black",
+                Colors.Orange => "orange",
+                Colors.Purple => "purple",
+                Colors.Blue => "blue",
+                Colors.Green => "green",
+                Colors.Red => "red",
+                Colors.Yellow => "yellow",
+                _ => "white"
+            };
+
+            return $"<color=\"{colorStr}\">{text}</color>";
+        }
+
+        public static string ColoredUsername(IServerPlayer? player, Colors defaultColor = Colors.White)
+        {
+            if (player == null) return TextColor("Unknown Player", defaultColor);
+
+            var username = player.Username;
+            return ColoredUsername(username, player.Team, defaultColor);
+        }
+
+        public static string ColoredUsername(IClientPlayer? player, Colors defaultColor = Colors.White)
+        {
+            if (player == null) return TextColor("Unknown Player", defaultColor);
+
+            var username = player.Username;
+            return ColoredUsername(username, player.Team, defaultColor);
+        }
+
+        static string ColoredUsername(string username, Team team, Colors defaultColor)
+        {
+            return team switch
+            {
+                Team.Lifeblood => TextColor(username, Colors.Blue),
+                Team.Moss => TextColor(username, Colors.Green),
+                Team.Grimm => TextColor(username, Colors.Red),
+                Team.Hive => TextColor(username, Colors.Orange),
+                _ => TextColor(username, defaultColor),
+            };
         }
     }
 }

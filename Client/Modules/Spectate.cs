@@ -19,7 +19,7 @@ namespace SSMPUtils.Client.Modules
             Next
         }
 
-        static List<IClientPlayer> InScene = new List<IClientPlayer>();
+        static List<IClientPlayer> InScene = new();
         static int FollowedPlayerIndex = -1;
         public static GameObject? FollowedPlayer;
         static bool Following => FollowedPlayerIndex != -1;

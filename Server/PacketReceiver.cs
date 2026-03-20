@@ -97,18 +97,18 @@ namespace SSMPUtils.Server
             var player = Server.GetPlayer(id);
             if (player == null) return;
 
-            var opponent = Server.GetPlayer(data.KillerID)?.Username ?? "another user";
+            var opponent = Server.GetPlayer(data.KillerID);
             var deathString = player.Username + " " + DetermineDeathString(data.Cause, opponent);
 
             if (data.Cause != Cause.Player && data.RanAway)
             {
-                deathString += " while fighting " + opponent;
+                deathString += " while fighting " + Common.ColoredUsername(opponent);
             }
 
             Server.api.ServerManager.BroadcastMessage(deathString);
         }
 
-        static string DetermineDeathString(Cause cause, string username)
+        static string DetermineDeathString(Cause cause, IServerPlayer? player)
         {
             if (!DeathMessages.Messages.TryGetValue(cause, out var strings))
             {
@@ -118,7 +118,7 @@ namespace SSMPUtils.Server
             var str = strings.GetRandomElement();
             if (cause == Cause.Player)
             {
-                str += " " + username;
+                str += " " + Common.ColoredUsername(player);
             }
 
             return str;

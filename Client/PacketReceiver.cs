@@ -48,10 +48,9 @@ namespace SSMPUtils.Client
         public static void OnMessage(MessagePacket data)
         {
             var player = Client.api.ClientManager.GetPlayer(data.PlayerId);
-            var username = player?.Username ?? "Unknown Player";
             var message = data.Message switch
             {
-                Messages.TeleportDenied => $"{username} denied your teleport request.",
+                Messages.TeleportDenied => $"{Common.ColoredUsername(player)} denied your teleport request.",
                 _ => throw new NotImplementedException()
             };
 

@@ -34,4 +34,16 @@ namespace SSMPUtils.Utils
         Steam,
         Frost
     }
+
+    internal enum Colors
+    {
+        Black,
+        White,
+        Blue,
+        Green,
+        Orange,
+        Purple,
+        Red,
+        Yellow
+    }
 }
