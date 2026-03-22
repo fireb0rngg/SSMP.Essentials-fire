@@ -37,6 +37,13 @@ namespace SSMPUtils.Client
                 return;
             }
 
+            if (!Client.ServerSettings.TeleportsNeedRequests)
+            {
+                var request = new TeleportRequests.Request(data.PlayerId);
+                PacketSender.SendTeleportAccept(request);
+                return;
+            }
+
             TeleportRequests.AddRequest(player);
         }
 

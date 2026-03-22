@@ -27,9 +27,11 @@ namespace SSMPUtils.Client
 
         public override void Initialize(IClientApi clientApi)
         {
+
             instance = this;
             api = clientApi;
 
+            Log.SetLogger(Logger);
             PacketReceiver.Init();
             PacketSender.Init();
 

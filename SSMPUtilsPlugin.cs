@@ -23,12 +23,13 @@ public partial class SSMPUtilsPlugin : BaseUnityPlugin
     {
         instance = this;
         // Put your initialization logic here
-        Log.SetLogger(Logger);
-        Utils.Config.Init(Config);
-        Log.LogInfo($"Plugin {Name} ({Id}) has loaded!");
+
 
         SSMP.Api.Client.ClientAddon.RegisterAddon(new Client.Client());
         SSMP.Api.Server.ServerAddon.RegisterAddon(new Server.Server());
+
+        Utils.Config.Init(Config);
+        Logger.LogInfo($"Plugin {Name} ({Id}) has loaded!");
 
         Harmony.CreateAndPatchAll(typeof(MaskerPatch), "ssmp.utils");
         Harmony.CreateAndPatchAll(typeof(DamageHeroPatch), "ssmp.utils");
