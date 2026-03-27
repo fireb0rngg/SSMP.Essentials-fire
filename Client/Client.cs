@@ -13,7 +13,7 @@ namespace SSMPUtils.Client
     internal class Client : ClientAddon
     {
         protected override string Name => "SSMP Utils";
-        protected override string Version => SSMPUtilsPlugin.Version;
+        protected override string Version => SSMPEssentialsPlugin.Version;
         public override uint ApiVersion => Config.SSMPApiVersion;
         public override bool NeedsNetwork => true;
 
@@ -45,13 +45,13 @@ namespace SSMPUtils.Client
 
             Spectate.Init();
 
-            Log.LogInfo("Utils Client Initialized");
+            Log.LogInfo("SSMP Essentials Client Initialized");
 
         }
 
         public static void LocalChat(string message)
         {
-            SSMPUtilsPlugin.NextFrames.Add(() => api.UiManager.ChatBox.AddMessage(message));
+            SSMPEssentialsPlugin.NextFrames.Add(() => api.UiManager.ChatBox.AddMessage(message));
         }
 
         public static IClientPlayer? GetPlayerByName(string username)

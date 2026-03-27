@@ -128,7 +128,7 @@ namespace SSMPUtils.Client
 
         internal static void SendHealth(HealthData healthData)
         {
-            Log.LogInfo($"Sending health: {healthData}");
+            Log.LogDebug($"Sending health: {healthData}");
 
             var data = new HealthPacket
             {

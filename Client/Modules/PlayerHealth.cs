@@ -82,7 +82,7 @@ namespace SSMPUtils.Client.Modules
             var display = playerContainer.GetComponentInChildren<HealthDisplay>();
             if (display == null)
             {
-                Log.LogInfo("Creating display");
+                Log.LogDebug("Creating display");
                 var displayGameObject = new GameObject("Player Health Display");
                 displayGameObject.transform.SetParentReset(playerContainer.transform);
 
@@ -90,7 +90,7 @@ namespace SSMPUtils.Client.Modules
             }
             else
             {
-                Log.LogInfo("Display found");
+                Log.LogDebug("Display found");
             }
             display.Owner = id;
             return display;
@@ -188,7 +188,7 @@ namespace SSMPUtils.Client.Modules
 
         void Awake()
         {
-            Log.LogInfo("Health display awoke");
+            Log.LogDebug("Health display awoke");
             transform.Reset();
             PlayerHealth.CreateHealthBar(gameObject);
             Client.OnServerSettingsUpdate += OnSettingsChange;
@@ -201,13 +201,13 @@ namespace SSMPUtils.Client.Modules
 
             if (Client.ServerSettings.HealthbarsEnabled)
             {
-                Log.LogInfo("Settings changed, enabling");
+                Log.LogDebug("Settings changed, enabling");
                 gameObject.SetActive(true);
                 Refresh();
             }
             else
             {
-                Log.LogInfo("Settings changed, disabling");
+                Log.LogDebug("Settings changed, disabling");
                 gameObject.SetActive(false);
             }
         }
@@ -218,7 +218,6 @@ namespace SSMPUtils.Client.Modules
             Health = data.Health;
 
             var totalHealth = Health.MaxHealth + Health.BlueHealth;
-            Log.LogInfo($"Updating health: {Health}");
 
             for (int i = 0; i < PlayerHealth.MAX_HEALTH; i++)
             {

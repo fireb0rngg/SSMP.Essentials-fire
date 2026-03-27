@@ -38,7 +38,7 @@ namespace SSMPUtils.Utils
             {
                 _unused.AddRange(_used);
                 _used = new List<T>();
-                Log.LogInfo("Resetting NoRepeat");
+                //Log.LogInfo("Resetting NoRepeat");
             }
             _used.Add(element);
 

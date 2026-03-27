@@ -39,7 +39,7 @@ namespace SSMPUtils.Client.Modules
                 else parent = parent.parent;
             }
 
-            Log.LogInfo(isPlayer, damager.name);
+            Log.LogDebug(isPlayer, damager.name);
             if (isPlayer && parent)
             {
                 LatestCause = CauseOfDeath.Player;
@@ -56,7 +56,7 @@ namespace SSMPUtils.Client.Modules
             }
 
             LatestCause = DetermineHazardType(damager.hazardType);
-            Log.LogInfo(LatestCause);
+            Log.LogDebug(LatestCause);
         }
 
         static CauseOfDeath DetermineHazardType(HazardType hazardType)

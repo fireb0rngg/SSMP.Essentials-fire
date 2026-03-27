@@ -155,7 +155,7 @@ namespace SSMPUtils.Server
 
         static void OnPlayerHealth(ushort id, HealthPacket data)
         {
-            Log.LogInfo($"Received health from {id}: {data.Health}");
+            Log.LogDebug($"Received health from {id}: {data.Health}");
             var health = PlayerDataTracker.ServerInstance.GetPlayer(id);
             health.Health = data.Health;
 

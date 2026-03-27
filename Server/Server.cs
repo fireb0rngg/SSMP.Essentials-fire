@@ -8,7 +8,7 @@ namespace SSMPUtils.Server
     internal class Server : ServerAddon
     {
         protected override string Name => "SSMP Utils";
-        protected override string Version => SSMPUtilsPlugin.Version;
+        protected override string Version => SSMPEssentialsPlugin.Version;
         public override uint ApiVersion => Config.SSMPApiVersion;
         public override bool NeedsNetwork => true;
 
@@ -31,7 +31,7 @@ namespace SSMPUtils.Server
             ServerSettings.ReadFromFile();
             PacketReceiver.Init();
             PacketSender.Init();
-            Log.LogInfo("Utils Server Initialized");
+            Log.LogInfo("SSMP Essentials Server Initialized");
         }
 
         public static IServerPlayer? GetPlayer(ushort id)

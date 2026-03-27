@@ -23,7 +23,7 @@ namespace SSMPUtils.Client.Modules
         void SetHornetPosition()
         {
             GameManager.instance.OnFinishedEnteringScene -= SetHornetPosition;
-            Log.LogInfo("Setting hornet position");
+            Log.LogDebug("Setting hornet position");
 
             var hornet = Common.HornetObject;
 

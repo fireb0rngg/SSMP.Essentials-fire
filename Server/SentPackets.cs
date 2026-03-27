@@ -15,15 +15,12 @@ namespace SSMPUtils.Server.Packets
         {
             base.WriteData(packet);
             packet.Write(PlayerId);
-
         }
 
         public override void ReadData(IPacket packet)
         {
-            
             base.ReadData(packet);
             PlayerId = packet.ReadUShort();
-            Log.LogInfo($"Just from the server: {Health}");
         }
     }
 

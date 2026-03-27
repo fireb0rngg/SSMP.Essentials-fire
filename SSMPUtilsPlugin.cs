@@ -11,14 +11,15 @@ using SSMPUtils.Client.Modules.Patches;
 namespace SSMPUtils;
 
 // TODO - adjust the plugin guid as needed
-[BepInAutoPlugin(id: "io.github.bobbythecatfish.ssmp.utils")]
-public partial class SSMPUtilsPlugin : BaseUnityPlugin
+[BepInAutoPlugin(id: "io.github.bobbythecatfish.ssmp.essentials")]
+[BepInDependency("ssmp", BepInDependency.DependencyFlags.HardDependency)]
+public partial class SSMPEssentialsPlugin : BaseUnityPlugin
 {
     TestManager testManager = new TestManager();
     public static readonly List<Action> NextFrames = [];
     List<Action> _nextFrames = [];
 
-    internal static SSMPUtilsPlugin instance;
+    internal static SSMPEssentialsPlugin instance;
     private void Awake()
     {
         instance = this;
@@ -31,9 +32,9 @@ public partial class SSMPUtilsPlugin : BaseUnityPlugin
         Utils.Config.Init(Config);
         Logger.LogInfo($"Plugin {Name} ({Id}) has loaded!");
 
-        Harmony.CreateAndPatchAll(typeof(MaskerPatch), "ssmp.utils");
-        Harmony.CreateAndPatchAll(typeof(DamageHeroPatch), "ssmp.utils");
-        Harmony.CreateAndPatchAll(typeof(HealthPatch), "ssmp.utils");
+        Harmony.CreateAndPatchAll(typeof(MaskerPatch), "ssmp.essentials");
+        Harmony.CreateAndPatchAll(typeof(DamageHeroPatch), "ssmp.essentials");
+        Harmony.CreateAndPatchAll(typeof(HealthPatch), "ssmp.essentials");
 
         HeroController.OnHeroInstanceSet += InitializeHCModules;
 

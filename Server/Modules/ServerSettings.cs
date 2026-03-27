@@ -25,7 +25,6 @@ namespace SSMPUtils.Server.Modules
         public void ReadFromFile()
         {
             var path = Filepath();
-            Log.LogWarning(path);
             if (!File.Exists(path))
             {
                 Log.LogWarning($"{path} doesn't exist");
@@ -34,7 +33,6 @@ namespace SSMPUtils.Server.Modules
 
             var file = File.ReadAllText(path);
             var settings = JsonConvert.DeserializeObject<Dictionary<string, bool>>(file);
-            Log.LogWarning(settings == null ? "null" : settings);
             if (settings == null) return;
 
             void SetSetting(string key, ref bool value)
@@ -68,7 +66,6 @@ namespace SSMPUtils.Server.Modules
             };
 
             var settings = JsonConvert.SerializeObject(dictForm, Formatting.Indented);
-            Log.LogWarning(settings);
             if (settings == null) return;
 
             var path = Filepath();

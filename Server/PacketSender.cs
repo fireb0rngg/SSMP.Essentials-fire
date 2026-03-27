@@ -71,7 +71,6 @@ namespace SSMPUtils.Server
 
         internal static void BroadcastPlayerHealth(ushort playerId, HealthData health)
         {
-            Log.LogInfo(health);
             var data = new Packets.PlayerHealthPacket
             {
                 PlayerId = playerId,

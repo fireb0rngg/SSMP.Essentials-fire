@@ -12,7 +12,6 @@ namespace SSMPUtils.Utils
         {
             string[] names = path.Split('/');
 
-            Log.LogInfo(parent);
             if (parent == null) return null;
 
             for (int i = 0; i < names.Length; i++)
@@ -37,7 +36,7 @@ namespace SSMPUtils.Utils
                 if (child.name == name) return child.gameObject;
             }
 
-            Log.LogInfo($"{name} not found");
+            Log.LogWarning($"{name} not found");
             return null;
         }
     }

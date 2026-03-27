@@ -6,8 +6,8 @@ namespace SSMPUtils.Server.Commands
     internal class SettingsCommand : IServerCommand
     {
         public bool AuthorizedOnly => true;
-        public string Trigger => "/util";
-        public string[] Aliases => ["/utils"];
+        public string Trigger => "/essentials";
+        public string[] Aliases => ["/essential", "/ess", "/e"];
 
         const string SETTING_SUB = "set";
         const string HUDDLE_SETTING = "huddle";
