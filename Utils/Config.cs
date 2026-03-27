@@ -27,10 +27,11 @@ namespace SSMPUtils.Utils
 
         public static void Init(ConfigFile config)
         {
+#if DEBUG
             _testsEnabled = config.Bind("Misc", "Run Tests", false);
-
-            _spectateNext = config.Bind("Keybinds", "Spectate Next Player", KeyCode.Alpha2);
-            _spectatePrevious = config.Bind("Keybinds", "Spectate Previous Player", KeyCode.Alpha3);
+#endif
+            _spectatePrevious = config.Bind("Keybinds", "Spectate Previous Player", KeyCode.Alpha2);
+            _spectateNext = config.Bind("Keybinds", "Spectate Next Player", KeyCode.Alpha3);
             _exitSpectate = config.Bind("Keybinds", "Exit Spectate Mode", KeyCode.Alpha4);
             _freecamToggle = config.Bind("Keybinds", "Toggle Freecam Mode", KeyCode.Alpha5);
         }

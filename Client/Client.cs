@@ -51,15 +51,7 @@ namespace SSMPUtils.Client
 
         public static void LocalChat(string message)
         {
-            SSMPUtilsPlugin.instance.StartCoroutine(LocalChatDelayed(message));
-        }
-
-        static IEnumerator LocalChatDelayed(string message)
-        {
-            yield return new WaitForSeconds(0.5f);
-            api.UiManager.ChatBox.AddMessage(message);
-
-            yield break;
+            SSMPUtilsPlugin.NextFrames.Add(() => api.UiManager.ChatBox.AddMessage(message));
         }
 
         public static IClientPlayer? GetPlayerByName(string username)

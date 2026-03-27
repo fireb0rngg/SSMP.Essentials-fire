@@ -56,12 +56,12 @@ public partial class SSMPUtilsPlugin : BaseUnityPlugin
         }
         if (_nextFrames.Count > 0)
         {
-            foreach (var action in _nextFrames)
+            var actions = _nextFrames.ToArray();
+            _nextFrames.Clear();
+            foreach (var action in actions)
             {
-                Log.LogInfo("Executing next frame action");
                 action.Invoke();
             }
-            _nextFrames.Clear();
         }
 
         Inputs.Update();
@@ -71,7 +71,6 @@ public partial class SSMPUtilsPlugin : BaseUnityPlugin
     {
         if (NextFrames.Count > 0)
         {
-            Log.LogInfo($"Adding {NextFrames.Count} next frame actions");
             _nextFrames = [.. NextFrames];
             NextFrames.Clear();
         }
