@@ -1,23 +1,18 @@
-﻿using SSMP.Api.Client;
+﻿using System.Globalization;
+using UnityEngine.SceneManagement;
 using SSMP.Api.Client.Networking;
 using SSMP.Networking.Packet;
-using SSMPUtils.Client.Modules;
-using SSMPUtils.Client.Packets;
-using SSMPUtils.Data;
-using SSMPUtils.Utils;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Text;
-using UnityEngine;
-using UnityEngine.SceneManagement;
-using Vector2 = SSMP.Math.Vector2;
+using SSMP.Math;
+using SSMPEssentials.Client.Modules;
+using SSMPEssentials.Data;
+using SSMPEssentials.Utils;
+using SSMPEssentials.Client.Packets;
 
-namespace SSMPUtils.Client
+namespace SSMPEssentials.Client
 {
     internal static class PacketSender
     {
-        static IClientAddonNetworkSender<PacketIDs> sender;
+        static IClientAddonNetworkSender<PacketIDs>? sender;
         internal static void Init()
         {
             sender = Client.api.NetClient.GetNetworkSender<PacketIDs>(Client.instance);

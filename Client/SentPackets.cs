@@ -1,9 +1,9 @@
 ﻿using SSMP.Math;
 using SSMP.Networking.Packet;
-using SSMPUtils.Data;
-using SSMPUtils.Utils;
+using SSMPEssentials.Data;
+using SSMPEssentials.Utils;
 
-namespace SSMPUtils.Client.Packets
+namespace SSMPEssentials.Client.Packets
 {
     internal class TeleportPacket : Packet
     {        
@@ -93,7 +93,7 @@ namespace SSMPUtils.Client.Packets
 
     public class HealthPacket : Packet
     {
-        public HealthData Health;
+        public HealthData Health = new();
         public override void WriteData(IPacket packet)
         {
             packet.Write(Health.Health);
@@ -104,7 +104,7 @@ namespace SSMPUtils.Client.Packets
 
         public override void ReadData(IPacket packet)
         {
-            Health = new HealthData();
+            Health = new();
 
             Health.Health = packet.ReadInt();
             Health.MaxHealth = packet.ReadInt();

@@ -1,11 +1,12 @@
-﻿using SSMP.Networking.Packet;
+﻿using System;
+using Newtonsoft.Json;
+using SSMP.Networking.Packet;
 using SSMP.Networking.Packet.Data;
-using SSMPUtils.Client.Packets;
-using SSMPUtils.Server.Modules;
-using SSMPUtils.Utils;
-using System;
+using SSMPEssentials.Client.Packets;
+using SSMPEssentials.Server.Modules;
+using SSMPEssentials.Utils;
 
-namespace SSMPUtils.Server.Packets
+namespace SSMPEssentials.Server.Packets
 {
     internal class PlayerHealthPacket : HealthPacket
     {
@@ -30,27 +31,27 @@ namespace SSMPUtils.Server.Packets
 
         public override void WriteData(IPacket packet)
         {
-            packet.Write(ServerSettings.HuddleEnabled);
-            packet.Write(ServerSettings.TeleportsEnabled);
-            packet.Write(ServerSettings.TeleportsNeedRequests);
-            packet.Write(ServerSettings.DeathMessagesEnabled);
-            packet.Write(ServerSettings.HealthbarsEnabled);
-            packet.Write(ServerSettings.SpectateEnabled);
-            packet.Write(ServerSettings.FreecamEnabled);
+            foreach (var prop in ServerSettings.GetType().GetProperties())
+            {
+                if (!prop.CanRead) continue;
+                
+                packet.Write((bool)prop.GetValue(ServerSettings, null));
+            }
         }
 
         public override void ReadData(IPacket packet)
         {
-            ServerSettings = new(false)
+            ServerSettings = new(false);
+            foreach (var prop in ServerSettings.GetType().GetProperties())
             {
-                HuddleEnabled = packet.ReadBool(),
-                TeleportsEnabled = packet.ReadBool(),
-                TeleportsNeedRequests = packet.ReadBool(),
-                DeathMessagesEnabled = packet.ReadBool(),
-                HealthbarsEnabled = packet.ReadBool(),
-                SpectateEnabled = packet.ReadBool(),
-                FreecamEnabled = packet.ReadBool(),
-            };
+                if (!prop.CanWrite) continue;
+                prop.SetValue(ServerSettings, packet.ReadBool(), null);
+            }
+
+#if DEBUG
+            var json = JsonConvert.SerializeObject(ServerSettings, Formatting.Indented);
+            Log.LogWarning(json);
+#endif
         }
     }
     public static class Packets

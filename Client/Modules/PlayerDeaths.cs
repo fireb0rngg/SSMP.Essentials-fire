@@ -1,15 +1,11 @@
-﻿using GlobalEnums;
-using HarmonyLib;
-using HutongGames.PlayMaker.Actions;
-using SSMPUtils.Utils;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-using UnityEngine.Rendering;
+using GlobalEnums;
+using UnityEngine.SceneManagement;
+using SSMPEssentials.Client.Commands;
+using SSMPEssentials.Utils;
 
-namespace SSMPUtils.Client.Modules
+namespace SSMPEssentials.Client.Modules
 {
     internal static class PlayerDeaths
     {
@@ -27,6 +23,18 @@ namespace SSMPUtils.Client.Modules
                 ranAway = true;
             }
             PacketSender.SendDeath(LatestCause, LatestPlayerAttack, ranAway);
+
+            var currentScene = SceneManager.GetActiveScene().name;
+            var hornet = Common.HornetObject;
+
+            // Check if hornet even exists
+            if (hornet == null) return;
+
+            LatestCause = CauseOfDeath.Generic;
+            LatestPlayerAttack = 0;
+
+            TeleportBack.PreviousScene = currentScene;
+            TeleportBack.PreviousLocation = hornet.transform.position;
         }
 
         public static void DetermineCauseOfDamage(DamageHero damager)

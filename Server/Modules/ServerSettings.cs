@@ -1,88 +1,101 @@
-﻿using Newtonsoft.Json;
-using SSMPUtils.Utils;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
 using System.Reflection;
+using Newtonsoft.Json;
+using SSMP.Game.Settings;
+using SSMPEssentials.Utils;
 
-namespace SSMPUtils.Server.Modules
+namespace SSMPEssentials.Server.Modules
 {
     internal class ServerSettings
     {
-        public bool HuddleEnabled = true;
-        public bool TeleportsEnabled = true;
-        public bool TeleportsNeedRequests = true;
-        public bool DeathMessagesEnabled = true;
-        public bool HealthbarsEnabled = true;
-        public bool SpectateEnabled = true;
-        public bool FreecamEnabled = true;
+        [JsonProperty("huddle")]
+        [SettingAlias("huddle")]
+        public bool HuddleEnabled { get; set; } = true;
+        
+        [JsonProperty("teleport")]
+        [SettingAlias("teleport", "tp")]
+        public bool TeleportsEnabled { get; set; } = true;
+        
+        [JsonProperty("back")]
+        [SettingAlias("back", "tpback")]
+        public bool BackEnabled { get; set; } = true;
+        
+        [JsonProperty("teleport_requests")]
+        [SettingAlias("tpa", "tpd", "tpr", "tpreq", "tprequests")]
+        public bool TeleportsNeedRequests { get; set; } = true;
+        
+        [JsonProperty("death_messages")]
+        [SettingAlias("deathmessages", "death")]
+        public bool DeathMessagesEnabled { get; set; } = true;
+        
+        [JsonProperty("healthbars")]
+        [SettingAlias("healthbars", "health")]
+        public bool HealthbarsEnabled { get; set; } = true;
 
+        [JsonProperty("spectate")]
+        [SettingAlias("spectate")]
+        public bool SpectateEnabled { get; set; } = true;
+        
+        [JsonProperty("freecam")]
+        [SettingAlias("freecam")]
+        public bool FreecamEnabled { get; set; } = true;
         private static string Filepath()
         {
             var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             return Path.Combine(dir, "ServerSettings.json");
         }
 
-        public void ReadFromFile()
+        public static ServerSettings ReadFromFile()
         {
             var path = Filepath();
             if (!File.Exists(path))
             {
                 Log.LogWarning($"{path} doesn't exist");
-                return;
+                new ServerSettings(false).WriteToFile();
+                return new ServerSettings(false);
             }
 
-            var file = File.ReadAllText(path);
-            var settings = JsonConvert.DeserializeObject<Dictionary<string, bool>>(file);
-            if (settings == null) return;
-
-            void SetSetting(string key, ref bool value)
+            try
             {
-                if (settings.TryGetValue(key, out var val))
-                {
-                    value = val;
-                }
+                var fileContents = File.ReadAllText(path);
+                var settings = JsonConvert.DeserializeObject<ServerSettings>(fileContents);
+                return settings ?? new ServerSettings(false);
             }
-
-            SetSetting("HuddleEnabled", ref HuddleEnabled);
-            SetSetting("TeleportsEnabled", ref TeleportsEnabled);
-            SetSetting("TeleportsNeedRequests", ref TeleportsNeedRequests);
-            SetSetting("DeathMessages", ref DeathMessagesEnabled);
-            SetSetting("Healthbars", ref HealthbarsEnabled);
-            SetSetting("SpectateEnabled", ref SpectateEnabled);
-            SetSetting("FreecamEnabled", ref FreecamEnabled);
+            catch (Exception e)
+            {
+                Log.LogError($"Could not load server settings from file:\n{e}");
+                return new ServerSettings(false);
+            }
         }
 
-        public void OnUpdate()
+        public void WriteToFile()
         {
-            var dictForm = new Dictionary<string, bool>
-            {
-                {"HuddleEnabled", HuddleEnabled},
-                {"TeleportsEnabled", TeleportsEnabled },
-                {"TeleportsNeedRequests", TeleportsNeedRequests},
-                {"DeathMessages", DeathMessagesEnabled},
-                {"Healthbars", HealthbarsEnabled},
-                {"SpectateEnabled", SpectateEnabled},
-                {"FreecamEnabled", FreecamEnabled },
-            };
-
-            var settings = JsonConvert.SerializeObject(dictForm, Formatting.Indented);
-            if (settings == null) return;
-
             var path = Filepath();
             if (!Directory.Exists(Path.GetDirectoryName(path)))
             {
                 Log.LogWarning($"{path} directory doesn't exist");
                 return;
             }
-            File.WriteAllText(path, settings);
 
-            PacketSender.BroadcastSettingsUpdate();
+            var settings = JsonConvert.SerializeObject(this, Formatting.Indented);
+            if (settings == null) return;
+
+            try
+            {
+                File.WriteAllText(path, settings);
+            }
+            catch (Exception e)
+            {
+                Log.LogError($"Could not write server settings to file:\n{e}");
+            }
         }
 
         public ServerSettings(bool client)
         {
             HuddleEnabled = !client;
             TeleportsEnabled = !client;
+            BackEnabled = !client;
             TeleportsNeedRequests = !client;
             DeathMessagesEnabled = !client;
             HealthbarsEnabled = !client;

@@ -1,19 +1,18 @@
-﻿using SSMP.Api.Client.Networking;
-using SSMPUtils.Utils;
-using SSMPUtils.Server.Packets;
-using SSMPUtils.Client.Packets;
-using SSMPUtils.Client.Modules;
+﻿using System;
 using UnityEngine;
-using System;
+using SSMP.Api.Client.Networking;
+using SSMPEssentials.Client.Modules;
+using SSMPEssentials.Client.Packets;
+using SSMPEssentials.Server.Packets;
+using SSMPEssentials.Utils;
 
-namespace SSMPUtils.Client
+namespace SSMPEssentials.Client
 {
     internal static class PacketReceiver
     {
-        static IClientAddonNetworkReceiver<PacketIDs> receiver;
         public static void Init()
         {
-            receiver = Client.api.NetClient.GetNetworkReceiver<PacketIDs>(Client.instance, Server.Packets.Packets.Instantiate);
+            var receiver = Client.api.NetClient.GetNetworkReceiver<PacketIDs>(Client.instance, Server.Packets.Packets.Instantiate);
             receiver.RegisterPacketHandler<TeleportPacket>(PacketIDs.Huddle, OnHuddle);
             receiver.RegisterPacketHandler<TeleportRequestPacket>(PacketIDs.TeleportRequest, OnTeleportRequest);
             receiver.RegisterPacketHandler<TeleportPacket>(PacketIDs.TeleportAccept, OnTeleportAccepted);

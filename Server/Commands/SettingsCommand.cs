@@ -1,7 +1,10 @@
-﻿using SSMP.Api.Command.Server;
-using System.Linq;
+﻿using System.Collections.Generic;
+using System.Reflection;
+using SSMP.Api.Command.Server;
+using SSMP.Game.Settings;
+using ServerSettings = SSMPEssentials.Server.Modules.ServerSettings;
 
-namespace SSMPUtils.Server.Commands
+namespace SSMPEssentials.Server.Commands
 {
     internal class SettingsCommand : IServerCommand
     {
@@ -10,16 +13,10 @@ namespace SSMPUtils.Server.Commands
         public string[] Aliases => ["/essential", "/ess", "/e"];
 
         const string SETTING_SUB = "set";
-        const string HUDDLE_SETTING = "huddle";
-        const string TELEPORT_SETTING = "tp";
-        const string TELEPORT_REQUEST_SETTING = "tprequests";
-        const string DEATH_MESSAGES_SETTING = "deathmessages";
-        const string HEALTHBAR_SETTING = "healthbars";
-        const string SPECTATE_SETTING = "spectate";
-        const string FREECAM_SETTING = "freecam";
 
         public void Execute(ICommandSender sender, string[] arguments)
         {
+            // Invalid syntax
             var syntax = $"Invalid Syntax. {Trigger} {SETTING_SUB} <setting> <true/false>";
             if (arguments.Length < 2)
             {
@@ -27,70 +24,69 @@ namespace SSMPUtils.Server.Commands
                 return;
             }
 
-            var validSettings = $"Valid settings are {HUDDLE_SETTING}, {TELEPORT_SETTING}, {TELEPORT_REQUEST_SETTING}, {DEATH_MESSAGES_SETTING}, {HEALTHBAR_SETTING}, {SPECTATE_SETTING}, {FREECAM_SETTING}";
+            // Get settings
+            var settingProps = typeof(ServerSettings).GetProperties();
+            var validSettingNames = new List<string>();
+            var validSettings = new Dictionary<string, PropertyInfo>();
+            foreach (var prop in settingProps)
+            {
+                var aliasAttribute = prop.GetCustomAttribute<SettingAliasAttribute>();
+                validSettings.Add(prop.Name, prop);
+                if (aliasAttribute == null || aliasAttribute.Aliases.Length == 0)
+                {
+                    validSettingNames.Add(prop.Name);
+                    continue;
+                }
+
+                // Prefer first alias for string name
+                validSettingNames.Add(aliasAttribute.Aliases[0]);
+                foreach (var alias in aliasAttribute.Aliases)
+                {
+                    validSettings.Add(alias, prop);
+                }
+            }
+
+            // No setting provided, send list of settings
+            var validSettingsStr = $"Valid settings are {string.Join(", ", validSettingNames)}";
             if (arguments.Length == 2)
             {
-                sender.SendMessage(validSettings);
+                sender.SendMessage(validSettingsStr);
                 return;
             }
 
-            if (arguments.Length != 4)
+            // Setting not found, send list of settings
+            var settingNameInput = arguments[2].ToLower().Replace("_", "");
+            if (!validSettings.TryGetValue(settingNameInput, out var setting))
             {
-                sender.SendMessage(syntax);
+                sender.SendMessage(validSettingsStr);
                 return;
             }
 
+            // Get current setting value if not provided
+            if (arguments.Length == 3)
+            {
+                var currentValue = setting.GetValue(Server.ServerSettings);
+                sender.SendMessage($"Setting '{setting.Name}' currently has value: {currentValue}");
+                return;
+            }
+
+            // Invalid value
             var valueStr = arguments[3].ToLower();
             if (valueStr != "true" && valueStr != "false")
             {
                 sender.SendMessage(syntax);
                 return;
             }
-
-            var setting = arguments[2];
+            
+            // Update value
             var value = valueStr == "true";
             var status = value ? "enabled" : "disabled";
 
-            switch (setting)
-            {
-                case HUDDLE_SETTING:
-                    Server.ServerSettings.HuddleEnabled = value;
-                    Server.BroadcastMessage($"Huddles are now {status}");
-                    break;
-                case TELEPORT_SETTING:
-                    Server.ServerSettings.TeleportsEnabled = value;
-                    Server.BroadcastMessage($"Teleporting is now {status}");
-                    break;
-                case TELEPORT_REQUEST_SETTING:
-                    Server.ServerSettings.TeleportsNeedRequests = value;
-                    if (Server.ServerSettings.TeleportsEnabled)
-                    {
-                        status = value ? "now" : "no longer";
-                        Server.BroadcastMessage($"Teleports {status} require requests");
-                    }
-                    break;
-                case DEATH_MESSAGES_SETTING:
-                    Server.ServerSettings.DeathMessagesEnabled = value;
-                    Server.BroadcastMessage($"Death messages are now {status}");
-                    break;
-                case HEALTHBAR_SETTING:
-                    Server.ServerSettings.HealthbarsEnabled = value;
-                    Server.BroadcastMessage($"Healthbars are now {status}");
-                    break;
-                case SPECTATE_SETTING:
-                    Server.ServerSettings.SpectateEnabled = value;
-                    Server.BroadcastMessage($"Spectating is now {status}");
-                    break;
-                case FREECAM_SETTING:
-                    Server.ServerSettings.FreecamEnabled = value;
-                    Server.BroadcastMessage($"Freecam is now {status}");
-                    break;
-                default:
-                    sender.SendMessage(validSettings);
-                    return;
-            }
+            setting.SetValue(Server.ServerSettings, value);
+            Server.BroadcastMessage($"Changed setting '{setting.Name}' to: {value}");
 
-            Server.ServerSettings.OnUpdate();
+            Server.ServerSettings.WriteToFile();
+            PacketSender.BroadcastSettingsUpdate();
         }
 
     }

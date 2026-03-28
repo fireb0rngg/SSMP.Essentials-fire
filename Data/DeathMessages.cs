@@ -1,7 +1,7 @@
-﻿using SSMPUtils.Utils;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using SSMPEssentials.Utils;
 
-namespace SSMPUtils.Data
+namespace SSMPEssentials.Data
 {
     internal static class DeathMessages
     {

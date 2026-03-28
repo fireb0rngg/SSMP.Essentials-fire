@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
-namespace SSMPUtils.Data
+namespace SSMPEssentials.Data
 {
     internal class PlayerDataTracker
     {

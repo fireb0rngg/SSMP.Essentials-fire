@@ -1,14 +1,13 @@
-using BepInEx;
-using SSMPUtils.Client.Modules;
-using SSMPUtils.Utils;
-using SSMPUtils.Utils.Tests;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using BepInEx;
 using HarmonyLib;
-using SSMPUtils.Client.Modules.Patches;
+using SSMPEssentials.Client.Modules.Patches;
+using SSMPEssentials.Client.Modules;
+using SSMPEssentials.Utils.Tests;
+using SSMPEssentials.Utils;
 
-namespace SSMPUtils;
+namespace SSMPEssentials;
 
 // TODO - adjust the plugin guid as needed
 [BepInAutoPlugin(id: "io.github.bobbythecatfish.ssmp.essentials")]

@@ -1,27 +1,18 @@
 ﻿using SSMP.Api.Server;
 using SSMP.Api.Server.Networking;
-using SSMPUtils.Utils;
-using SSMPUtils.Client.Packets;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using SSMP.Math;
-using Cause = SSMPUtils.Utils.CauseOfDeath;
-using SSMPUtils.Data;
-using SSMPUtils.Client.Modules;
-using SSMP.Api.Client;
-using SSMP.Api.Command.Server;
-using SSMP.Api.Command;
+using SSMPEssentials.Data;
+using SSMPEssentials.Utils;
+using SSMPEssentials.Client.Packets;
+using Cause = SSMPEssentials.Utils.CauseOfDeath;
 
-namespace SSMPUtils.Server
+namespace SSMPEssentials.Server
 {
     internal static class PacketReceiver
     {
-        static IServerAddonNetworkReceiver<PacketIDs> receiver;
-
         public static void Init()
         {
-            receiver = Server.api.NetServer.GetNetworkReceiver<PacketIDs>(Server.instance, Client.Packets.Packets.Instantiate);
+            var receiver = Server.api.NetServer.GetNetworkReceiver<PacketIDs>(Server.instance, Client.Packets.Packets.Instantiate);
             receiver.RegisterPacketHandler<TeleportPacket>(PacketIDs.Huddle, OnHuddle);
             receiver.RegisterPacketHandler<TeleportRequestPacket>(PacketIDs.TeleportRequest, OnTeleportRequest);
             receiver.RegisterPacketHandler<TeleportPacket>(PacketIDs.TeleportAccept, OnTeleportRequestAccept);

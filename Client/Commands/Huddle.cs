@@ -1,7 +1,7 @@
-﻿using SSMP.Api.Command.Client;
-using System.Linq;
+﻿using System.Linq;
+using SSMP.Api.Command.Client;
 
-namespace SSMPUtils.Client.Commands
+namespace SSMPEssentials.Client.Commands
 {
     internal class Huddle : IClientCommand
     {
@@ -10,32 +10,28 @@ namespace SSMPUtils.Client.Commands
         public string[] Aliases => ["/tpall"];
         public void Execute(string[] arguments)
         {
-            // Huddle to a specific user
-            if (arguments.Length > 1)
-            {
-                var args = arguments.ToList();
-                args.RemoveAt(0);
-
-                // Username wasn't blank
-                var username = string.Join(" ", args);
-                if (username.Length > 0)
-                {
-                    // Attempt to find player
-                    var player = Client.GetPlayerByName(username);
-                    if (player != null)
-                    {
-                        PacketSender.SendHuddle(player.Id);
-                        return;
-                    }
-
-                    // Attempt failed
-                    Client.LocalChat($"Player '{username}' not found.");
-                    return;
-                }
-            }
+            var args = arguments.ToList();
+            args.RemoveAt(0);
+            var username = string.Join(" ", args);
 
             // Base case, no username
-            PacketSender.SendHuddle();
+            if (args.Count <= 0)
+            {
+                PacketSender.SendHuddle();
+                return;
+            }
+
+            // Huddle to a specific user
+            var player = Client.GetPlayerByName(username);
+            if (player != null)
+            {
+                PacketSender.SendHuddle(player.Id);
+                return;
+            }
+
+            // Attempt failed
+            Client.LocalChat($"Player '{username}' not found.");
+            return;
         }
     }
 }

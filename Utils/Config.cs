@@ -1,29 +1,27 @@
-﻿using BepInEx.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using UnityEngine;
+﻿using UnityEngine;
+using BepInEx.Configuration;
 
-namespace SSMPUtils.Utils
+namespace SSMPEssentials.Utils
 {
     internal static class Config
     {
         public static uint SSMPApiVersion = 1;
+        public static string ModName = "SSMP Essentials";
 
-        static ConfigEntry<bool> _testsEnabled;
+        static ConfigEntry<bool>? _testsEnabled;
         public static bool TestsEnabled => _testsEnabled?.Value ?? false;
 
-        static ConfigEntry<KeyCode> _spectateNext;
-        public static KeyCode SpectateNext => _spectateNext.Value;
+        static ConfigEntry<KeyCode>? _spectateNext;
+        public static KeyCode SpectateNext => _spectateNext?.Value ?? KeyCode.None;
 
-        static ConfigEntry<KeyCode> _spectatePrevious;
-        public static KeyCode SpectatePrevious => _spectatePrevious.Value;
+        static ConfigEntry<KeyCode>? _spectatePrevious;
+        public static KeyCode SpectatePrevious => _spectatePrevious?.Value ?? KeyCode.None;
 
-        static ConfigEntry<KeyCode> _exitSpectate;
-        public static KeyCode ExitSpectate => _exitSpectate.Value;
+        static ConfigEntry<KeyCode>? _exitSpectate;
+        public static KeyCode ExitSpectate => _exitSpectate?.Value ?? KeyCode.None;
 
-        static ConfigEntry<KeyCode> _freecamToggle;
-        public static KeyCode FreecamToggle => _freecamToggle.Value;
+        static ConfigEntry<KeyCode>? _freecamToggle;
+        public static KeyCode FreecamToggle => _freecamToggle?.Value ?? KeyCode.None;
 
         public static void Init(ConfigFile config)
         {

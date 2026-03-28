@@ -1,13 +1,14 @@
 ﻿using SSMP.Api.Server.Networking;
 using SSMP.Math;
-using SSMPUtils.Data;
-using SSMPUtils.Utils;
+using SSMPEssentials.Data;
+using SSMPEssentials.Utils;
+using System.Diagnostics.CodeAnalysis;
 
-namespace SSMPUtils.Server
+namespace SSMPEssentials.Server
 {
     internal static class PacketSender
     {
-        static IServerAddonNetworkSender<PacketIDs> sender;
+        static IServerAddonNetworkSender<PacketIDs>? sender;
         internal static void Init()
         {
             sender = Server.api.NetServer.GetNetworkSender<PacketIDs>(Server.instance);
@@ -15,6 +16,12 @@ namespace SSMPUtils.Server
 
         static void Broadcast(PacketIDs id, Packet packet, ushort senderId, bool collection = true)
         {
+            if (sender == null)
+            {
+                Log.LogError("Unable to send packet, packet sender is null.");
+                return;
+            }
+
             var players = Server.api.ServerManager.Players;
             foreach (var player in players)
             {
@@ -43,6 +50,11 @@ namespace SSMPUtils.Server
                 PlayerId = senderId
             };
 
+            if (sender == null)
+            {
+                Log.LogError("Unable to send packet, packet sender is null.");
+                return;
+            }
             sender.SendCollectionData(PacketIDs.TeleportRequest, data, targetPlayerId);
         }
 
@@ -55,6 +67,11 @@ namespace SSMPUtils.Server
                 Scene = scene
             };
 
+            if (sender == null)
+            {
+                Log.LogError("Unable to send packet, packet sender is null.");
+                return;
+            }
             sender.SendSingleData(PacketIDs.TeleportAccept, data, playerToTeleportId);
         }
 
@@ -66,6 +83,11 @@ namespace SSMPUtils.Server
                 PlayerId = senderId
             };
 
+            if (sender == null)
+            {
+                Log.LogError("Unable to send packet, packet sender is null.");
+                return;
+            }
             sender.SendCollectionData(PacketIDs.Message, data, recipientId);
         }
 
@@ -82,6 +104,12 @@ namespace SSMPUtils.Server
 
         internal static void SendAllPlayerHealth(ushort recipientId)
         {
+            if (sender == null)
+            {
+                Log.LogError("Unable to send packet, packet sender is null.");
+                return;
+            }
+
             foreach (var player in PlayerDataTracker.ServerInstance.GetAllData())
             {
                 var data = new Packets.PlayerHealthPacket
@@ -101,6 +129,11 @@ namespace SSMPUtils.Server
                 ServerSettings = Server.ServerSettings
             };
 
+            if (sender == null)
+            {
+                Log.LogError("Unable to send packet, packet sender is null.");
+                return;
+            }
             sender.BroadcastSingleData(PacketIDs.Settings, data);
         }
 
@@ -111,6 +144,11 @@ namespace SSMPUtils.Server
                 ServerSettings = Server.ServerSettings
             };
 
+            if (sender == null)
+            {
+                Log.LogError("Unable to send packet, packet sender is null.");
+                return;
+            }
             sender.SendSingleData(PacketIDs.Settings, data, id);
         }
     }

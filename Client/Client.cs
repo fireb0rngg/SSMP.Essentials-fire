@@ -1,18 +1,16 @@
-﻿using SSMP.Api.Client;
-using SSMPUtils.Client.Commands;
-using SSMPUtils.Client.Modules;
-using SSMPUtils.Server.Modules;
-using SSMPUtils.Utils;
-using System;
-using System.Collections;
+﻿using System;
 using System.Linq;
-using UnityEngine;
+using SSMP.Api.Client;
+using SSMPEssentials.Client.Modules;
+using SSMPEssentials.Server.Modules;
+using SSMPEssentials.Client.Commands;
+using SSMPEssentials.Utils;
 
-namespace SSMPUtils.Client
+namespace SSMPEssentials.Client
 {
     internal class Client : ClientAddon
     {
-        protected override string Name => "SSMP Utils";
+        protected override string Name => Config.ModName;
         protected override string Version => SSMPEssentialsPlugin.Version;
         public override uint ApiVersion => Config.SSMPApiVersion;
         public override bool NeedsNetwork => true;
@@ -21,7 +19,7 @@ namespace SSMPUtils.Client
 
         internal static Client instance;
 
-        internal static ServerSettings ServerSettings = new(true);
+        internal static ServerSettings ServerSettings = ServerSettings.ReadFromFile();
 
         internal static Action OnServerSettingsUpdate = () => { };
 
@@ -39,6 +37,7 @@ namespace SSMPUtils.Client
             api.CommandManager.RegisterCommand(new TeleportRequest());
             api.CommandManager.RegisterCommand(new TeleportAccept());
             api.CommandManager.RegisterCommand(new TeleportDeny());
+            api.CommandManager.RegisterCommand(new TeleportBack());
 
             api.ClientManager.DisconnectEvent += () => Spectate.ReturnToSelf();
             api.ClientManager.PlayerEnterSceneEvent += PlayerHealth.OnPlayerEnter;

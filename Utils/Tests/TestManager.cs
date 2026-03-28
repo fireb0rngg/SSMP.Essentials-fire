@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace SSMPUtils.Utils.Tests
+namespace SSMPEssentials.Utils.Tests
 {
     internal class TestManager
     {

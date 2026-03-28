@@ -1,12 +1,10 @@
-﻿using SSMP.Api.Client;
+﻿using System.Linq;
+using UnityEngine;
+using SSMP.Api.Client;
 using SSMP.Api.Command.Client;
-using SSMPUtils.Client.Modules;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using SSMPEssentials.Client.Modules;
 
-namespace SSMPUtils.Client.Commands
+namespace SSMPEssentials.Client.Commands
 {
     internal class TeleportAccept : IClientCommand
     {
@@ -31,6 +29,25 @@ namespace SSMPUtils.Client.Commands
         {
             var player = TeleportRequest.GetUsernameFromArgs(arguments, false);
             TeleportRequests.RespondToRequest(false, player);
+        }
+    }
+
+    internal class TeleportBack : IClientCommand
+    {
+        public string Trigger => "/back";
+        public string[] Aliases => [];
+        public static string PreviousScene = "";
+        public static Vector2 PreviousLocation = Vector2.zero;
+        public void Execute(string[] arguments)
+        {
+            if (PreviousScene == "")
+            {
+                Client.LocalChat("I don't have your previous location.");
+                return;
+            }
+
+            var warp = new Warp(PreviousScene, PreviousLocation);
+            warp.WarpToPosition();
         }
     }
 

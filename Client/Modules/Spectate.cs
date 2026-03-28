@@ -1,15 +1,11 @@
-﻿using SSMP.Api.Client;
-using System;
+﻿using System.Linq;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using System.Text;
 using UnityEngine.SceneManagement;
-using SSMPUtils.Client.Modules.Patches;
-using XGamingRuntime;
-using SSMPUtils.Utils;
+using SSMP.Api.Client;
+using SSMPEssentials.Utils;
 
-namespace SSMPUtils.Client.Modules
+namespace SSMPEssentials.Client.Modules
 {
     internal static class Spectate
     {
@@ -27,18 +23,18 @@ namespace SSMPUtils.Client.Modules
         public static bool freecam = false;
 
         public static Vector2 FreecamMovementVector = Vector2.zero;
-        static GameObject arrows;
-        static GameObject LeftArrow;
-        static GameObject RightArrow;
-        static GameObject UpArrow;
-        static GameObject DownArrow;
+        static GameObject? arrows;
+        static GameObject? LeftArrow;
+        static GameObject? RightArrow;
+        static GameObject? UpArrow;
+        static GameObject? DownArrow;
 
         public static void Init()
         {
             Client.api.ClientManager.PlayerEnterSceneEvent += AddPlayer;
             Client.api.ClientManager.PlayerLeaveSceneEvent += RemovePlayer;
             SceneManager.activeSceneChanged += (a, b) => ReturnToSelf(true);
-            GameManager.instance.GamePausedChange += OnUnpause;
+            GameManager.instance.GamePausedChange += OnPauseChange;
 
             Client.OnServerSettingsUpdate += () =>
             {
@@ -96,21 +92,21 @@ namespace SSMPUtils.Client.Modules
             //target.SetDetachedFromHero(true);
             //GameManager.instance.cameraCtrl.mode = CameraController.CameraMode.LOCKED;
             //GameManager.instance.cameraCtrl.mode = CameraController.CameraMode.FOLLOWING;
-            arrows.SetActive(true);
+            if (arrows != null) arrows.SetActive(true);
             ToggleUpDownArrows(false);
         }
 
         public static void Update()
         {
-            var cam = GameManager.SilentInstance?.cameraCtrl;
+            var cam = GameManager.SilentInstance != null ? GameManager.SilentInstance.cameraCtrl : null;
             if (cam == null) return;
 
-            Vector2 position = Vector2.zero;
             if (freecam)
             {
                 var camPosition = cam.cam.transform.position;
-                position = FreecamMovementVector + (Vector2)camPosition;
+                var position = FreecamMovementVector + (Vector2)camPosition;
                 SetFreecamBoundsArrows(position);
+                cam.SnapTo(position.x, position.y);
             }
             else if (Following)
             {
@@ -128,7 +124,6 @@ namespace SSMPUtils.Client.Modules
             }
 
             //GameManager.instance.cameraCtrl.isGameplayScene = false;
-            cam.SnapTo(position.x, position.y);
         }
 
         static void SetFreecamBoundsArrows(Vector2 position)
@@ -140,10 +135,10 @@ namespace SSMPUtils.Client.Modules
             var down = position.y <= Constants.CAM_BOUND_Y + grace;
             var up = position.y >= camera.yLimit - grace;
 
-            LeftArrow.SetActive(!left);
-            RightArrow.SetActive(!right);
-            DownArrow.SetActive(!down);
-            UpArrow.SetActive(!up);
+            if (LeftArrow != null) LeftArrow.SetActive(!left);
+            if (RightArrow != null) RightArrow.SetActive(!right);
+            if (DownArrow != null) DownArrow.SetActive(!down);
+            if (UpArrow != null) UpArrow.SetActive(!up);
         }
 
         public static void EndPreviousMode()
@@ -184,30 +179,30 @@ namespace SSMPUtils.Client.Modules
 
         static void ToggleVignette(bool status)
         {
-            var hornet = HeroController.SilentInstance?.gameObject;
+            var hornet = HeroController.SilentInstance != null ? HeroController.SilentInstance.gameObject : null;
             if (hornet != null)
             {
                 var vignette = hornet.FindGameObjectInChildren("Vignette");
-                vignette?.SetActive(status);
+                if (vignette != null) vignette.SetActive(status);
             }
         }
 
         static void FixMasks(GameObject playerObject)
         {
-            var remaskers = Resources.FindObjectsOfTypeAll<Remasker>();
+            var masks = Resources.FindObjectsOfTypeAll<Remasker>();
             var hero = playerObject.GetComponent<Collider2D>();
-            foreach (var masker in remaskers)
+            foreach (var mask in masks)
             {
-                if (masker == null) continue;
+                if (mask == null) continue;
 
-                var collider = masker.GetComponent<Collider2D>();
+                var collider = mask.GetComponent<Collider2D>();
                 if (collider != null && collider.IsTouching(hero))
                 {
-                    masker.Entered();
+                    mask.Entered();
                 }
                 else
                 {
-                    masker.Exited(false);
+                    mask.Exited(false);
                 }
             }
         }
@@ -228,7 +223,7 @@ namespace SSMPUtils.Client.Modules
             freecam = true;
             ImmobilizePlayer();
             FixMasks(HeroController.instance.gameObject);
-            arrows.SetActive(true);
+            if (arrows != null) arrows.SetActive(true);
             ToggleUpDownArrows(true);
         }
 
@@ -272,7 +267,7 @@ namespace SSMPUtils.Client.Modules
             arrows.transform.GetChild(3).gameObject.SetActive(status); // up
         }
 
-        private static void OnUnpause(bool isPaused)
+        private static void OnPauseChange(bool isPaused)
         {
             if (isPaused) return;
             if (freecam || Following) ReturnToSelf();

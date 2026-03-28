@@ -1,13 +1,13 @@
 ﻿using SSMP.Api.Server;
-using SSMPUtils.Server.Commands;
-using SSMPUtils.Server.Modules;
-using SSMPUtils.Utils;
+using SSMPEssentials.Server.Modules;
+using SSMPEssentials.Server.Commands;
+using SSMPEssentials.Utils;
 
-namespace SSMPUtils.Server
+namespace SSMPEssentials.Server
 {
     internal class Server : ServerAddon
     {
-        protected override string Name => "SSMP Utils";
+        protected override string Name => Config.ModName;
         protected override string Version => SSMPEssentialsPlugin.Version;
         public override uint ApiVersion => Config.SSMPApiVersion;
         public override bool NeedsNetwork => true;

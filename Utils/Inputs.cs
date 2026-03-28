@@ -1,8 +1,8 @@
 ﻿using InControl;
-using SSMPUtils.Client.Modules;
 using UnityEngine;
+using SSMPEssentials.Client.Modules;
 
-namespace SSMPUtils.Utils
+namespace SSMPEssentials.Utils
 {
     internal static class Inputs
     {
@@ -36,7 +36,7 @@ namespace SSMPUtils.Utils
         }
         public static void Update()
         {
-            if (Client.Client.api.UiManager.ChatBox.IsOpen) return;
+            if (Client.Client.api?.UiManager.ChatBox.IsOpen ?? false) return;
             if (Input.GetKeyDown(Config.SpectateNext)) Spectate.FocusOnPlayer(Spectate.MoveDir.Next);
             else if (Input.GetKeyDown(Config.SpectatePrevious)) Spectate.FocusOnPlayer(Spectate.MoveDir.Prev);
             else if (Input.GetKeyDown(Config.ExitSpectate)) Spectate.ReturnToSelf();

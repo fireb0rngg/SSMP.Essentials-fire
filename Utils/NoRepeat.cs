@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 
-namespace SSMPUtils.Utils
+namespace SSMPEssentials.Utils
 {
     internal class NoRepeat<T> : IEnumerable
     {

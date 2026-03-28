@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace SSMPUtils.Utils.Tests
+namespace SSMPEssentials.Utils.Tests
 {
     internal abstract class BaseTest
     {

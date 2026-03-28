@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using UnityEngine;
-using UnityEngine.SceneManagement;
+﻿using UnityEngine;
 
-namespace SSMPUtils.Utils
+namespace SSMPEssentials.Utils
 {
     internal static class GameObjectUtils
     {

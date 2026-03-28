@@ -1,12 +1,7 @@
 ﻿using HarmonyLib;
-using HutongGames.PlayMaker.Actions;
-using SSMPUtils.Utils;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using UnityEngine;
+using SSMPEssentials.Utils;
 
-namespace SSMPUtils.Client.Modules.Patches
+namespace SSMPEssentials.Client.Modules.Patches
 {
     [HarmonyPatch]
     internal class DamageHeroPatch

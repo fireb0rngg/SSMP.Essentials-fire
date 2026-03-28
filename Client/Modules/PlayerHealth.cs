@@ -1,18 +1,18 @@
-﻿using GlobalEnums;
-using SSMP.Api.Client;
-using SSMPUtils.Data;
-using SSMPUtils.Utils;
-using System;
+﻿using System;
 using System.Linq;
+using GlobalEnums;
 using UnityEngine;
 using UnityEngine.UI;
+using SSMP.Api.Client;
+using SSMPEssentials.Data;
+using SSMPEssentials.Utils;
 using Object = UnityEngine.Object;
 
-namespace SSMPUtils.Client.Modules
+namespace SSMPEssentials.Client.Modules
 {
     internal static class PlayerHealth
     {
-        static GameObject maskPrefab;
+        static GameObject? maskPrefab;
         public const int MAX_HEALTH = 18;
         public const int NORMAL_MASK_ID = 9;
         public const int MISSING_MASK_ID = 0;

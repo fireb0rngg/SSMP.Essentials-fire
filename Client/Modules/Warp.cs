@@ -1,12 +1,9 @@
-﻿using SSMPUtils.Utils;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using UnityEngine;
-using UnityEngine.SceneManagement;
-using Vector2 = SSMP.Math.Vector2;
+﻿using UnityEngine.SceneManagement;
+using SSMP.Math;
+using SSMPEssentials.Client.Commands;
+using SSMPEssentials.Utils;
 
-namespace SSMPUtils.Client.Modules
+namespace SSMPEssentials.Client.Modules
 {
     internal class Warp
     {
@@ -26,8 +23,7 @@ namespace SSMPUtils.Client.Modules
             Log.LogDebug("Setting hornet position");
 
             var hornet = Common.HornetObject;
-
-            hornet.transform.SetPosition2D(position);
+            if (hornet != null) hornet.transform.SetPosition2D(position);
 
             teleporting = false;
         }
@@ -43,6 +39,9 @@ namespace SSMPUtils.Client.Modules
                 FailedWarp(scene);
                 return;
             }
+
+            TeleportBack.PreviousScene = currentScene;
+            TeleportBack.PreviousLocation = hornet.transform.position;
 
             teleporting = true;
 

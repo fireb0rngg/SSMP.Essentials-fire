@@ -9,6 +9,7 @@ Ever wanted to teleport to your friend quickly, or gather everyone in one spot? 
 - `/tp <username>` Sends a teleport request to another player
 - `/tpa` (`/tpaccept`) Accepts a teleport request
 - `/tpd` (`/tpdeny`) Rejects a teleport request
+- `/back` Teleports you back to where you were before you teleported or died.
 - `/huddle` Teleports everyone to you. Must be authorized to use.
 - `/huddle <username>` Teleports everyone to a specific player. Must be authorized to use.
 
@@ -43,6 +44,7 @@ These messages are similar
 Valid options are:
 - `huddle` Toggles ability to do `/huddle`
 - `tp` Toggles ability to do `/tp`
+- `back` Toggles ability to use `/back`
 - `tprequests` If true, `/tp` requires a `/tpa` response. If false, players are teleported immediately.
 - `deathmessages` Toggles death messages
 - `healthbars` Toggles all healthbars

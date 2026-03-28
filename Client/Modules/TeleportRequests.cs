@@ -1,11 +1,9 @@
-﻿using SSMP.Api.Client;
-using SSMPUtils.Utils;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using SSMP.Api.Client;
+using SSMPEssentials.Utils;
 
-namespace SSMPUtils.Client.Modules
+namespace SSMPEssentials.Client.Modules
 {
     internal static class TeleportRequests
     {

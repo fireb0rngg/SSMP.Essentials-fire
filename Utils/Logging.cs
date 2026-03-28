@@ -1,10 +1,20 @@
 ﻿using SSMP.Logging;
 
-namespace SSMPUtils.Utils
+namespace SSMPEssentials.Utils
 {
+    internal class FakeLogger : ILogger
+    {
+        public void Debug(string message){}
+        public void Error(string message){}
+        public void Info(string message){}
+        public void Message(string message){}
+        public void Warn(string message){}
+    }
+
+
     internal static class Log
     {
-        static ILogger logger;
+        static ILogger logger = new FakeLogger();
         public static void SetLogger(ILogger log)
         {
             logger = log;
@@ -20,7 +30,7 @@ namespace SSMPUtils.Utils
             //return true;
             if (log.Source.SourceName == "SSMP" && log.Data is string data)
             {
-                if (data.StartsWith("[SSMPUtils")) return true;
+                if (data.StartsWith("[SSMPEssentials")) return true;
             }
 
             return false;

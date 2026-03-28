@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using HarmonyLib;
-using SSMPUtils.Utils;
+﻿using HarmonyLib;
 using UnityEngine;
 
-namespace SSMPUtils.Client.Modules.Patches
+namespace SSMPEssentials.Client.Modules.Patches
 {
     [HarmonyPatch]
     internal class MaskerPatch

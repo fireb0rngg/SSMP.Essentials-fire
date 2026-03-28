@@ -1,7 +1,6 @@
 ﻿using HarmonyLib;
-using HutongGames.PlayMaker.Actions;
 
-namespace SSMPUtils.Client.Modules.Patches
+namespace SSMPEssentials.Client.Modules.Patches
 {
     [HarmonyPatch]
     class HealthPatch
