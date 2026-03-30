@@ -13,7 +13,9 @@ namespace SSMPEssentials.Client.Modules
     internal static class PlayerHealth
     {
         static GameObject? maskPrefab;
-        public const int MAX_HEALTH = 18;
+        public const int MAX_HEALTH = 10;
+        public const int MAX_BLUE_MASKS = 8;
+        public const int MAX_TOTAL_HEALTH = MAX_HEALTH + MAX_BLUE_MASKS;
         public const int NORMAL_MASK_ID = 9;
         public const int MISSING_MASK_ID = 0;
         public const int BLUE_MASK_ID = 50;
@@ -30,7 +32,7 @@ namespace SSMPEssentials.Client.Modules
                 BlueHealth = hc.healthBlue,
                 LifebloodState = HeroController.instance.IsInLifebloodState
             };
-            
+
             PacketSender.SendHealth(data);
         }
 
@@ -41,10 +43,13 @@ namespace SSMPEssentials.Client.Modules
             if (localHealth != null)
             {
                 var register = localHealth.GetComponents<EventRegister>().FirstOrDefault(r => r.SubscribedEvent == "ADD BLUE HEALTH");
-                if (register != null)
+                if (register == null)
                 {
-                    register.ReceivedEvent += OnHealthChange;
+                    Log.LogError("Unable to hook Lifeblood Health Updates");
+                    return;
                 }
+
+                register.ReceivedEvent += OnHealthChange;
             }
         }
 
@@ -59,9 +64,9 @@ namespace SSMPEssentials.Client.Modules
 
         public static void SetPlayerHealth(IClientPlayer player, HealthData healthData)
         {
-            var clampedHealth = Math.Clamp(healthData.Health, 0, 10);
-            var clampedMax = Math.Clamp(healthData.MaxHealth, 0, 10);
-            var clampedBlue = Math.Clamp(healthData.BlueHealth, 0, 8);
+            var clampedHealth = Math.Clamp(healthData.Health, 0, MAX_HEALTH);
+            var clampedMax = Math.Clamp(healthData.MaxHealth, 0, MAX_HEALTH);
+            var clampedBlue = Math.Clamp(healthData.BlueHealth, 0, MAX_BLUE_MASKS);
 
             var health = PlayerDataTracker.ClientInstance.GetPlayer(player.Id).Health;
             health.Health = clampedHealth;
@@ -128,11 +133,11 @@ namespace SSMPEssentials.Client.Modules
         public static void CreateHealthBar(GameObject healthBar)
         {
             healthBar.layer = (int)PhysLayers.UI;
-            var spacing = new Vector2(0, 0.64f);
-            var canvasScale = 0.222f;
-            var position = 2.3f;
+            var spacing = new Vector2(-0.3f, 0.4f);
+            var canvasScale = 0.2f;
+            var position = new Vector2(0, 2);
             var columns = 6;
-            var cellSize = new Vector2(2.06f, 1.55f);
+            var cellSize = new Vector2(1.76f, 1.55f);
             var maskScale = new Vector2(1.43f, 1.43f);
             var canvasWidth = 15;
             var canvasHeight = 9;
@@ -158,11 +163,11 @@ namespace SSMPEssentials.Client.Modules
             transform.pivot = new Vector2(0.5f, 0);
             transform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, canvasWidth);
             transform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, canvasHeight);
-            transform.SetLocalPositionY(position);
+            transform.SetLocalPosition2D(position);
             transform.SetScale2D(new Vector2(canvasScale, canvasScale));
 
             var prefab = GetMask();
-            for (int i = 0; i < MAX_HEALTH; i++)
+            for (int i = 0; i < MAX_TOTAL_HEALTH; i++)
             {
                 var newObj = Object.Instantiate(prefab);
                 newObj.transform.SetParentReset(healthBar.transform);
@@ -219,7 +224,7 @@ namespace SSMPEssentials.Client.Modules
 
             var totalHealth = Health.MaxHealth + Health.BlueHealth;
 
-            for (int i = 0; i < PlayerHealth.MAX_HEALTH; i++)
+            for (int i = 0; i < PlayerHealth.MAX_TOTAL_HEALTH; i++)
             {
                 var child = transform.GetChild(i);
                 var healthNum = i + 1;
