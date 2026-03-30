@@ -197,7 +197,7 @@ namespace SSMPEssentials.Client.Modules
 
         void OnSettingsChange()
         {
-            if (!gameObject.transform.parent.gameObject.activeInHierarchy) return;
+            //if (!gameObject.transform.parent.gameObject.activeInHierarchy) return;
 
             if (Client.ServerSettings.HealthbarsEnabled)
             {

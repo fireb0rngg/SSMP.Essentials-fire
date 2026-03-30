@@ -40,6 +40,12 @@ namespace SSMPEssentials.Client.Commands
         public static Vector2 PreviousLocation = Vector2.zero;
         public void Execute(string[] arguments)
         {
+            if (!Client.ServerSettings.BackEnabled)
+            {
+                Client.LocalChat("/back is currently disabled.");
+                return;
+            }
+
             if (PreviousScene == "")
             {
                 Client.LocalChat("I don't have your previous location.");
