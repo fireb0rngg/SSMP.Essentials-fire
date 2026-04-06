@@ -297,7 +297,6 @@ namespace SSMPEssentials.Client.Modules
 
         private static bool CanSpectatePlayer(IClientPlayer player, ServerSettings settings)
         {
-            Log.LogInfo(settings, settings.TeamsEnabled);
             if (!Client.ServerSettings.SpectateTeamOnly) return true;
             if (!settings.TeamsEnabled) return true;
 

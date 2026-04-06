@@ -1,13 +1,9 @@
 ﻿using HarmonyLib;
 using SSMP.Api.Client;
-using SSMP.Game;
 using SSMP.Game.Settings;
 using SSMP.Networking.Packet;
 using SSMPEssentials.Utils;
-using System;
-using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
 
 
 /**
@@ -43,7 +39,6 @@ namespace SSMPEssentials.Client.Modules.Patches
         [HarmonyPostfix]
         private static void Postfix(object __instance)
         {
-            Log.LogInfo(__instance);
             var settings = Traverse.Create(__instance).Property("ServerSettings").GetValue<ServerSettings>();
 
             Client.OnSSMPSettingsUpdate?.Invoke(settings);
@@ -76,17 +71,13 @@ namespace SSMPEssentials.Client.Modules.Patches
         public static void Postfix(IClientPlayer __instance)
         {
             var player = __instance;
-            Log.LogInfo(player.Id);
             if (!player.IsInLocalScene) return;
             
-            //var settings = Traverse.Create(__instance).Property("Team").GetValue<Team>();
             var team = player.Team;
             var self = Client.api.ClientManager;
 
             if (self.Team == team) Spectate.AddPlayer(player);
             else Spectate.RemovePlayer(player);
-
-            //Client.OnSSMPSettingsUpdate?.Invoke(settings);
         }
     }
 }

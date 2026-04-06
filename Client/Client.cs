@@ -73,7 +73,6 @@ namespace SSMPEssentials.Client
         {
             var manager = api.ClientManager;
             var settingsType = manager.GetType();
-            Log.LogError(settingsType.Name);
 
             var traverse = Traverse.Create(manager).Field("_modSettings").Property("ServerSettings");
             return traverse.GetValue<SSMP.Game.Settings.ServerSettings>();

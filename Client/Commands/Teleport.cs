@@ -3,6 +3,7 @@ using UnityEngine;
 using SSMP.Api.Client;
 using SSMP.Api.Command.Client;
 using SSMPEssentials.Client.Modules;
+using SSMPEssentials.Utils;
 
 namespace SSMPEssentials.Client.Commands
 {
@@ -68,6 +69,7 @@ namespace SSMPEssentials.Client.Commands
             var player = GetUserFromArgs(arguments, true);
             if (player == null) return;
 
+            Client.LocalChat($"Teleport request sent to {Common.ColoredUsername(player)}.");
             PacketSender.SendTeleportRequest(player.Id);
         }
 
