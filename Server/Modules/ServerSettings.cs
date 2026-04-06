@@ -15,7 +15,7 @@ namespace SSMPEssentials.Server.Modules
         public bool HuddleEnabled { get; set; } = true;
         
         [JsonProperty("teleport")]
-        [SettingAlias("teleport", "tp")]
+        [SettingAlias("tp", "teleport")]
         public bool TeleportsEnabled { get; set; } = true;
         
         [JsonProperty("back")]
@@ -23,7 +23,7 @@ namespace SSMPEssentials.Server.Modules
         public bool BackEnabled { get; set; } = true;
         
         [JsonProperty("teleport_requests")]
-        [SettingAlias("tpa", "tpd", "tpr", "tpreq", "tprequests")]
+        [SettingAlias("tprequests", "tpa", "tpd", "tpr", "tpreq")]
         public bool TeleportsNeedRequests { get; set; } = true;
         
         [JsonProperty("death_messages")]

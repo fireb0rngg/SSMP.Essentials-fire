@@ -20,8 +20,8 @@ In addition, freecam is available to freely spectate your current room.
 
 ### Keybinds
 I'd recommend changing these. You can use BepInEx Config Manager or ModMenu.
-- `2` - Spectate previous player in list
-- `3` - Spectate next player in list
+- `2` - Spectate previous player
+- `3` - Spectate next player
 - `4` - Exit spectate/freecam mode
 - `5` - Freecam
 
@@ -35,11 +35,11 @@ showing current health, missing masks, and lifeblood masks.
 
 ## Death Messages
 When you inevitably die, the game will send out a death message, informing other players of your demise.
-These messages are similar
+These messages are similar in style to the ones found in Minecraft.
 
 
 # Configuration
-`/essentials set <setting> <true/false>` will toggle a module on or off for all players.
+`/essentials set <setting> <true/false>` (`/e set`) will toggle a module on or off for all players.
 
 Valid options are:
 - `huddle` Toggles ability to do `/huddle`
@@ -49,6 +49,7 @@ Valid options are:
 - `deathmessages` Toggles death messages
 - `healthbars` Toggles all healthbars
 - `spectate` Toggles ability to spectate other players
+- `spectateteam` If enabled, players can only spectate other players that are on their team.
 - `freecam` Toggles ability to use freecam
 
-By default, all options are enabled.
+By default, all options (except for spectateteam) are enabled.
