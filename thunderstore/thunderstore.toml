@@ -8,7 +8,7 @@ namespace = "BobbyTheCatfish"
 description = "A collection of utilities to improve the multiplayer experience. Includes teleports, healthbars, player spectating, and death messages."
 
 # Replace this with a correct repo URL if the default is not accurate
-websiteUrl = "https://github.com/BobbyTheCatfish/SSMP-Utils"
+websiteUrl = "https://github.com/BobbyTheCatfish/SSMP.Essentials"
 containsNsfwContent = false
 
 
