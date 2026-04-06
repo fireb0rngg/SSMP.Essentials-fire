@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using SSMP.Api.Client;
 using SSMPEssentials.Utils;
+using SSMP.Game.Settings;
 
 namespace SSMPEssentials.Client.Modules
 {
@@ -15,7 +16,7 @@ namespace SSMPEssentials.Client.Modules
             Next
         }
 
-        private static readonly List<IClientPlayer> InScene = new();
+        private static List<IClientPlayer> InScene = new();
 
         public static GameObject? FollowedPlayer;
         private static int FollowedPlayerIndex = -1;
@@ -35,6 +36,7 @@ namespace SSMPEssentials.Client.Modules
             Client.api.ClientManager.PlayerEnterSceneEvent += AddPlayer;
             Client.api.ClientManager.PlayerLeaveSceneEvent += RemovePlayer;
             Client.api.ClientManager.PlayerDisconnectEvent += RemovePlayer;
+
             SceneManager.activeSceneChanged += (a, b) => ReturnToSelf(true);
             GameManager.instance.GamePausedChange += OnPauseChange;
 
@@ -42,6 +44,13 @@ namespace SSMPEssentials.Client.Modules
             {
                 if (!Client.ServerSettings.FreecamEnabled && freecam) ReturnToSelf();
                 if (!Client.ServerSettings.SpectateEnabled && Following) ReturnToSelf();
+
+                InScene = GetPlayersInScene();
+            };
+
+            Client.OnSSMPSettingsUpdate += (s) =>
+            {
+                InScene = GetPlayersInScene(s);
             };
         }
 
@@ -53,7 +62,12 @@ namespace SSMPEssentials.Client.Modules
 
         public static void FocusOnPlayer(MoveDir dir)
         {
-            if (InScene.Count == 0) return;
+            if (InScene.Count == 0)
+            {
+                Client.LocalChat("There isn't anyone to spectate in this room.");
+                return;
+            }
+
             if (!Client.ServerSettings.SpectateEnabled)
             {
                 Client.LocalChat("Spectating is currently disabled.");
@@ -275,15 +289,31 @@ namespace SSMPEssentials.Client.Modules
             if (freecam || Following) ReturnToSelf();
         }
 
-        private static void AddPlayer(IClientPlayer player)
+        private static bool CanSpectatePlayer(IClientPlayer player)
         {
-            var exists = InScene.Any(p => p.Id == player.Id);
-            if (exists) return;
+            var settings = Client.GetClientServerSettings();
+            return CanSpectatePlayer(player, settings);
+        }
+
+        private static bool CanSpectatePlayer(IClientPlayer player, ServerSettings settings)
+        {
+            Log.LogInfo(settings, settings.TeamsEnabled);
+            if (!Client.ServerSettings.SpectateTeamOnly) return true;
+            if (!settings.TeamsEnabled) return true;
+
+            return player.Team == Client.api.ClientManager.Team;
+        }
+
+        public static void AddPlayer(IClientPlayer player)
+        {
+            if (!CanSpectatePlayer(player)) return;
+
+            if (InScene.Contains(player)) return;
 
             InScene.Add(player);
         }
 
-        private static void RemovePlayer(IClientPlayer player)
+        public static void RemovePlayer(IClientPlayer player)
         {
             var index = InScene.FindIndex(p => p.Id == player.Id);
             if (index == -1) return;
@@ -302,7 +332,15 @@ namespace SSMPEssentials.Client.Modules
             var api = Client.api;
             var players = api.ClientManager.Players.ToList();
 
-            return players.Where(p => p.IsInLocalScene).ToList();
+            return players.Where(p => p.IsInLocalScene && CanSpectatePlayer(p)).ToList();
+        }
+
+        private static List<IClientPlayer> GetPlayersInScene(ServerSettings settings)
+        {
+            var api = Client.api;
+            var players = api.ClientManager.Players.ToList();
+
+            return players.Where(p => p.IsInLocalScene && CanSpectatePlayer(p, settings)).ToList();
         }
     }
 }

@@ -31,7 +31,7 @@ namespace SSMPEssentials.Server.Packets
 
         public override void WriteData(IPacket packet)
         {
-            foreach (var prop in ServerSettings.GetType().GetProperties())
+            foreach (var prop in ServerSettings.GetProps())
             {
                 if (!prop.CanRead) continue;
                 
@@ -42,7 +42,7 @@ namespace SSMPEssentials.Server.Packets
         public override void ReadData(IPacket packet)
         {
             ServerSettings = new(false);
-            foreach (var prop in ServerSettings.GetType().GetProperties())
+            foreach (var prop in ServerSettings.GetProps())
             {
                 if (!prop.CanWrite) continue;
                 prop.SetValue(ServerSettings, packet.ReadBool(), null);

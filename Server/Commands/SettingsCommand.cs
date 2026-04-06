@@ -2,7 +2,6 @@
 using System.Reflection;
 using SSMP.Api.Command.Server;
 using SSMP.Game.Settings;
-using ServerSettings = SSMPEssentials.Server.Modules.ServerSettings;
 
 namespace SSMPEssentials.Server.Commands
 {
@@ -25,7 +24,7 @@ namespace SSMPEssentials.Server.Commands
             }
 
             // Get settings
-            var settingProps = typeof(ServerSettings).GetProperties();
+            var settingProps = Server.ServerSettings.GetProps();
             var validSettingNames = new List<string>();
             var validSettings = new Dictionary<string, PropertyInfo>();
             foreach (var prop in settingProps)

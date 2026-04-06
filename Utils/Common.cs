@@ -63,7 +63,7 @@ namespace SSMPEssentials.Utils
 
         public static string ColoredUsername(IClientPlayer? player, Colors defaultColor = Colors.White)
         {
-            if (player == null) return ServerTextColor("Unknown Player", defaultColor);
+            if (player == null) return LocalTextColor("Unknown Player", defaultColor);
 
             var username = player.Username;
             return player.Team switch

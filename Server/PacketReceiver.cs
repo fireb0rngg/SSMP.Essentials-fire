@@ -94,7 +94,7 @@ namespace SSMPEssentials.Server
                 return;
             }
 
-            PacketSender.SendTeleportAccepted(data.PlayerId, data.Scene, data.Position);
+            PacketSender.SendTeleportAccepted(data.PlayerId, id, data.Scene, data.Position);
         }
 
         public static void OnMessage(ushort id, MessagePacket data)

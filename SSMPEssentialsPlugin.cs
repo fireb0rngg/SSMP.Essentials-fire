@@ -31,9 +31,12 @@ public partial class SSMPEssentialsPlugin : BaseUnityPlugin
         Utils.Config.Init(Config);
         Logger.LogInfo($"Plugin {Name} ({Id}) has loaded!");
 
-        Harmony.CreateAndPatchAll(typeof(MaskerPatch), "ssmp.essentials");
-        Harmony.CreateAndPatchAll(typeof(DamageHeroPatch), "ssmp.essentials");
-        Harmony.CreateAndPatchAll(typeof(HealthPatch), "ssmp.essentials");
+        var harmony = new Harmony("ssmp.essentials");
+        harmony.PatchAll();
+        //Harmony.CreateAndPatchAll(typeof(MaskerPatch), "ssmp.essentials");
+        //Harmony.CreateAndPatchAll(typeof(DamageHeroPatch), "ssmp.essentials");
+        //Harmony.CreateAndPatchAll(typeof(HealthPatch), "ssmp.essentials");
+
 
         HeroController.OnHeroInstanceSet += InitializeHCModules;
 

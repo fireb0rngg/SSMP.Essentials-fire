@@ -5,6 +5,7 @@ using SSMPEssentials.Client.Modules;
 using SSMPEssentials.Server.Modules;
 using SSMPEssentials.Client.Commands;
 using SSMPEssentials.Utils;
+using HarmonyLib;
 
 namespace SSMPEssentials.Client
 {
@@ -23,9 +24,10 @@ namespace SSMPEssentials.Client
 
         internal static Action OnServerSettingsUpdate = () => { };
 
+        internal static Action<SSMP.Game.Settings.ServerSettings>? OnSSMPSettingsUpdate;
+
         public override void Initialize(IClientApi clientApi)
         {
-
             instance = this;
             api = clientApi;
 
@@ -65,6 +67,16 @@ namespace SSMPEssentials.Client
         public static IClientPlayer? GetPlayer(ushort id)
         {
             return api.ClientManager.GetPlayer(id);
+        }
+
+        public static SSMP.Game.Settings.ServerSettings GetClientServerSettings()
+        {
+            var manager = api.ClientManager;
+            var settingsType = manager.GetType();
+            Log.LogError(settingsType.Name);
+
+            var traverse = Traverse.Create(manager).Field("_modSettings").Property("ServerSettings");
+            return traverse.GetValue<SSMP.Game.Settings.ServerSettings>();
         }
     }
 }

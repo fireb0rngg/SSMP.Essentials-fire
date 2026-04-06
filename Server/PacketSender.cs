@@ -58,11 +58,11 @@ namespace SSMPEssentials.Server
             sender.SendCollectionData(PacketIDs.TeleportRequest, data, targetPlayerId);
         }
 
-        internal static void SendTeleportAccepted(ushort playerToTeleportId, string scene,  Vector2 position)
+        internal static void SendTeleportAccepted(ushort playerToTeleportId, ushort destinationPlayerId, string scene,  Vector2 position)
         {
             var data = new Client.Packets.TeleportPacket
             {
-                PlayerId = playerToTeleportId,
+                PlayerId = destinationPlayerId,
                 Position = position,
                 Scene = scene
             };

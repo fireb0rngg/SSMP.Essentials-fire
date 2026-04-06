@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using Newtonsoft.Json;
@@ -36,7 +37,12 @@ namespace SSMPEssentials.Server.Modules
         [JsonProperty("spectate")]
         [SettingAlias("spectate")]
         public bool SpectateEnabled { get; set; } = true;
+
+        [JsonProperty("spectate_team")]
+        [SettingAlias("spectateteam")]
+        public bool SpectateTeamOnly { get; set; } = false;
         
+
         [JsonProperty("freecam")]
         [SettingAlias("freecam")]
         public bool FreecamEnabled { get; set; } = true;
@@ -91,16 +97,22 @@ namespace SSMPEssentials.Server.Modules
             }
         }
 
+        public IEnumerable<PropertyInfo> GetProps()
+        {
+            var props = typeof(ServerSettings).GetProperties();
+            foreach (var prop in props)
+            {
+                yield return prop;
+            }
+        }
+
         public ServerSettings(bool client)
         {
-            HuddleEnabled = !client;
-            TeleportsEnabled = !client;
-            BackEnabled = !client;
-            TeleportsNeedRequests = !client;
-            DeathMessagesEnabled = !client;
-            HealthbarsEnabled = !client;
-            SpectateEnabled = !client;
-            FreecamEnabled = !client;
+            var props = GetProps();
+            foreach (var prop in props)
+            {
+                prop.SetValue(this, !client);
+            }
         }
     }
 }
