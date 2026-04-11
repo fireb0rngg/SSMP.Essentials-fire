@@ -5,8 +5,9 @@ namespace SSMPEssentials.Utils
 {
     internal static class Config
     {
-        public static uint SSMPApiVersion = 1;
-        public static string ModName = "SSMP Essentials";
+        public const uint SSMPApiVersion = 1;
+        public const string ModName = "SSMP Essentials";
+        public const string Version = "0.1.2";
 
         static ConfigEntry<bool>? _testsEnabled;
         public static bool TestsEnabled => _testsEnabled?.Value ?? false;

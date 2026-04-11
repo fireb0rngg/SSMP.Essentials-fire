@@ -2,15 +2,15 @@ using System;
 using System.Collections.Generic;
 using BepInEx;
 using HarmonyLib;
-using SSMPEssentials.Client.Modules.Patches;
 using SSMPEssentials.Client.Modules;
 using SSMPEssentials.Utils.Tests;
 using SSMPEssentials.Utils;
 
 namespace SSMPEssentials;
 
+
 // TODO - adjust the plugin guid as needed
-[BepInAutoPlugin(id: "io.github.bobbythecatfish.ssmp.essentials")]
+[BepInAutoPlugin(id: "io.github.bobbythecatfish.ssmp.essentials", version: Utils.Config.Version)]
 [BepInDependency("ssmp", BepInDependency.DependencyFlags.HardDependency)]
 public partial class SSMPEssentialsPlugin : BaseUnityPlugin
 {

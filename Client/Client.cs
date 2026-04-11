@@ -12,7 +12,7 @@ namespace SSMPEssentials.Client
     internal class Client : ClientAddon
     {
         protected override string Name => Config.ModName;
-        protected override string Version => SSMPEssentialsPlugin.Version;
+        protected override string Version => Config.Version;
         public override uint ApiVersion => Config.SSMPApiVersion;
         public override bool NeedsNetwork => true;
 
