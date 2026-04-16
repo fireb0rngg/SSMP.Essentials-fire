@@ -84,7 +84,7 @@ namespace SSMPEssentials.Client.Modules
 
         public static HealthDisplay FindOrCreateHealthBar(GameObject playerContainer, ushort id)
         {
-            var display = playerContainer.GetComponentInChildren<HealthDisplay>();
+            var display = playerContainer.GetComponentInChildren<HealthDisplay>(true);
             if (display == null)
             {
                 Log.LogDebug("Creating display");
@@ -198,6 +198,11 @@ namespace SSMPEssentials.Client.Modules
             PlayerHealth.CreateHealthBar(gameObject);
             Client.OnServerSettingsUpdate += OnSettingsChange;
             OnSettingsChange();
+        }
+
+        void OnDestroy()
+        {
+            Client.OnServerSettingsUpdate -= OnSettingsChange;
         }
 
         void OnSettingsChange()
